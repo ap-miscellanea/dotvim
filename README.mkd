@@ -1,0 +1,10 @@
+This is the content of my `~/.vim` directory. What do you do not see
+here is my `~/.vimrc`. I do not make it a symlink to the `vimrc` file
+in here. Rather, it is a script as well, one that simply ends with the
+following line:
+
+    runtime vimrc
+
+That causes the `vimrc` from this directory to be loaded. That way
+I have a place to keep non-public or very machine-specific bits of
+configuration.
