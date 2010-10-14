@@ -342,6 +342,10 @@ nnoremap <Leader><Leader> :call CycleLanguage()<CR>
 " plugin- and filetype-specific settings
 "-======================================
 
+" NERD_tree on the left is weird
+let g:NERDTreeWinPos = 'right'
+nnoremap <F12> :NERDTree<CR>
+
 " matchparen slows gvim down noticably
 let g:loaded_matchparen = 1
 
