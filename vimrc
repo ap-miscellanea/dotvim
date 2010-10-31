@@ -38,6 +38,7 @@ set backspace=2       " allow backspacing over indent,eol,start
 set nojoinspaces      " don't treat [.?!] specially when joining lines.
 set nostartofline     " don't jump to start of line on paging motions
 set autowrite         " auto-save prior to :! :make and others
+set hidden            " keep current buffer around when :edit'ing another file
 set noswapfile        " don't litter
 set nobackup          " don't litter
 set nowritebackup     " really, don't litter
