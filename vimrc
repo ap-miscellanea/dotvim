@@ -346,6 +346,9 @@ nnoremap <Leader><Leader> :call CycleLanguage()<CR>
 let g:NERDTreeWinPos = 'right'
 nnoremap <F12> :NERDTree<CR>
 
+" qbuf hotkey
+let g:qb_hotkey = '<F11>'
+
 " matchparen slows gvim down noticably
 let g:loaded_matchparen = 1
 
