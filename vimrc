@@ -184,9 +184,12 @@ vnoremap q" s"<C-R>""<Esc>
 vnoremap q` s`<C-R>"`<Esc>
 
 
+" fast window switching
+nnoremap <C-J> <C-W>j
+nnoremap <C-K> <C-W>k
 " fast buffer switching
-nnoremap <C-J> :bnext<CR>
-nnoremap <C-K> :bprev<CR>
+nnoremap <C-N> :bnext<CR>
+nnoremap <C-P> :bprev<CR>
 
 
 " Alt-LeftMouse for visual block selections
