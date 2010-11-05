@@ -388,7 +388,7 @@ if exists( '&filetype' )
 	" easier help browsing
 	autocmd FileType help nnoremap <buffer><CR> <C-]>
 	autocmd FileType help nnoremap <buffer><BS> <C-T>
-	autocmd FileType help nnoremap <buffer><Tab> :let s:tmpstoreprevsearch=@/<CR>/<Bar>\k*<Bar>/s+1<CR>:let @/=s:tmpstoreprevsearch<CR>:echo<CR>
+	autocmd FileType help nnoremap <buffer><Tab> :call search('<Bar>\zs\k*\ze<Bar>')<CR>:echo<CR>
 
 	" XML = nesting, which makes 4 places per tab way too much
 	" also, make it possible to autocomplete tag names with hyphens in them
@@ -418,7 +418,7 @@ if exists( '&filetype' )
 	autocmd FileType {mail,mkd} call CycleLanguage()
 
 	autocmd FileType mail setlocal expandtab textwidth=65 fencs=utf-8
-	autocmd FileType mail let s:tmpstoreprevsearch = @/ | /^$/+1 | let @/ = s:tmpstoreprevsearch
+	autocmd FileType mail if search('^$') | exe 'norm j0' | endif
 
 	" mail.vim links mailSubject to LineNR but that doesn't stand out enough
 	autocmd FileType mail hi link mailSubject PreProc
