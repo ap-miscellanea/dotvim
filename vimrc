@@ -375,6 +375,13 @@ let g:html_use_encoding = "utf-8"
 let g:perl_include_pod = 1 " include POD syntax highlighting
 
 if exists( '&filetype' )
+	" disable wrapping in most any particular format
+	" but enable it in email, Markdown, XML and X?HTML
+	" NB: this needs to be done here and this way so regular text files
+	" (which have no file type) will have the default wrapping enabled
+	autocmd FileType * setlocal nowrap
+	autocmd FileType {mail,mkd,xml,xhtml,html} setlocal wrap
+
 	" use internal help when editing vim scripts or viewing help
 	autocmd FileType {vim,help} setlocal keywordprg=:help
 
