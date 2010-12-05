@@ -29,7 +29,7 @@ endif
 set tabstop=4         " tabs displayed at 4 columns
 set softtabstop=4     " tab key shifts by 4 columns
 set shiftwidth=4      " indentation at 4 columns
-set list              " ensure we don't mess up the tabbing
+set nolist            " [will selectively set this later] ensure we don't mess up the tabbing
 set listchars=tab:›·,trail:•,nbsp:– " and make it look nice
 if has( "&shiftround" )
 	set shiftround    " always in-/outdent to next tabstop
@@ -379,7 +379,7 @@ if exists( '&filetype' )
 	" but enable it in email, Markdown, XML and X?HTML
 	" NB: this needs to be done here and this way so regular text files
 	" (which have no file type) will have the default wrapping enabled
-	autocmd FileType * setlocal nowrap
+	autocmd FileType * setlocal nowrap | setlocal list
 	autocmd FileType {mail,mkd,xml,xhtml,html} setlocal wrap
 
 	" use internal help when editing vim scripts or viewing help
