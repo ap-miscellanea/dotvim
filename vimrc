@@ -114,7 +114,7 @@ endif
 nnoremap <silent> <Esc><Esc> <Esc>:nohlsearch<CR><Esc>
 
 " missing ZZ and ZQ counterparts:
-" quick save-everything and quit-everything
+" quick save-buffer and quit-everything
 nnoremap ZS :w<CR>
 nnoremap ZX :qa<CR>
 
