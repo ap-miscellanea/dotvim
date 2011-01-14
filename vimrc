@@ -309,37 +309,41 @@ function! FindNumbers()
 endfunction
 nnoremap <Leader>n :call FindNumbers()<CR>:set hlsearch<CR>:echo<CR>
 
-function! CycleLanguage()
-	" this function really needs something like :letlocal
-	" but that does not exist in vim, therefore uses :exe 'setl'
-	if ! exists( 's:language' )
-		let s:save_spell=&spell
-		let s:save_spelllang=&spelllang
-		let s:language='en_gb'
-	elseif s:language == 'en_gb'
-		let s:language='de'
-	elseif s:language == 'de'
-		let s:language='el'
-		set keymap=greek_utf-8
-	else
-		unlet s:language
-		set keymap=
+
+let s:allowed_langs = [ 'en_gb', 'de', 'el' ]
+function! UnsetLanguage()
+	if exists( 's:save_spell' )
+		exe 'setl' s:save_spell
+		unlet s:save_spell
 	endif
+	set keymap=
+	unlet s:lang
 	echohl ModeMsg
-	if exists( 's:language' )
-		exe 'setl spell spelllang=' . s:language
-		echon 'Language: [' s:language ']'
-	else
-		if exists( 's:save_spell' )
-			exe 'setl spell' . ( s:save_spell ? '' : '!' )
-		endif
-		if exists( 's:save_spell' )
-			exe 'setl spelllang=' . s:save_spelllang
-		endif
-		unlet s:save_spell s:save_spelllang
-		echo 'Language off'
-	endif
+	echo 'Language off'
 	echohl None
+endfunction
+function! SetLanguage(lang)
+	if index(s:allowed_langs, a:lang) < 0 | throw 'Language "'.a:lang.'" not in list' | endif
+	if ! exists( 's:save_spell' )
+		let s:save_spell=( &spell ? 'spell' : 'nospell' ) . ' spelllang=' . &spelllang
+	endif
+	exe 'setl spell spelllang=' . a:lang
+	exe 'set keymap=' . ( a:lang == 'el' ? 'greek_utf-8' : '' )
+	let s:lang = a:lang
+	echohl ModeMsg
+	echon 'Language: [' a:lang ']'
+	echohl None
+endfunction
+function! CycleLanguage()
+	let next = 0
+	if exists( 's:lang' )
+		let next = index( s:allowed_langs, s:lang ) + 1
+	endif
+	if next >= len( s:allowed_langs )
+		call UnsetLanguage()
+	else
+		call SetLanguage( s:allowed_langs[next] )
+	endif
 endfunction
 nnoremap <Leader><Leader> :call CycleLanguage()<CR>
 
@@ -421,7 +425,7 @@ if exists( '&filetype' )
 	autocmd FileType crontab setlocal tabstop=8 softtabstop=8 shiftwidth=8 noexpandtab
 
 	" automatically enable spellcheck for mails and Markdown documents
-	autocmd FileType {mail,mkd} call CycleLanguage()
+	autocmd FileType {mail,mkd} call SetLanguage('en_gb')
 
 	autocmd FileType mail setlocal expandtab textwidth=65 fencs=utf-8
 	autocmd FileType mail if search('^$') | exe 'norm j0' | endif
