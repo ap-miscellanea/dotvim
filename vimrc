@@ -315,8 +315,8 @@ function! CycleLanguage()
 	if ! exists( 's:language' )
 		let s:save_spell=&spell
 		let s:save_spelllang=&spelllang
-		let s:language='en'
-	elseif s:language == 'en'
+		let s:language='en_gb'
+	elseif s:language == 'en_gb'
 		let s:language='de'
 	elseif s:language == 'de'
 		let s:language='el'
