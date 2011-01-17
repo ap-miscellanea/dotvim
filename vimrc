@@ -237,9 +237,6 @@ if has( "gui_running" )       " has( 'gui' ) alone is insufficient
 		nnoremap <M-Space> :simalt ~<CR>
 		inoremap <M-Space> <C-o>:simalt ~<CR>
 		try | set guifont=Consolas:h10:cANSI | catch | set guifont=Andale_Mono:h9:cANSI | endtry
-		" requires gvimfullscreen_win32 <http://www.vim.org/scripts/script.php?script_id=2596>
-		nnoremap <F11> :call libcallnr("gvimfullscreen.dll", "ToggleFullScreen", 0)<CR>
-		inoremap <F11> <C-o>:call libcallnr("gvimfullscreen.dll", "ToggleFullScreen", 0)<CR>
 	elseif has( "gui_mac" )
 		set guifont=Menlo:h13
 	endif
