@@ -236,7 +236,7 @@ if has( "gui_running" )       " has( 'gui' ) alone is insufficient
 	if has( "gui_win32" )
 		nnoremap <M-Space> :simalt ~<CR>
 		inoremap <M-Space> <C-o>:simalt ~<CR>
-		try | set guifont=Consolas:h10:cANSI | catch | set guifont=Andale_Mono:h9:cANSI | endtry
+		try | set guifont=Consolas:h8:cANSI | catch | set guifont=Andale_Mono:h8:cANSI | endtry
 	elseif has( "gui_mac" )
 		set guifont=Menlo:h13
 	endif
