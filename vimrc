@@ -297,6 +297,8 @@ endif
 
 command! GreekPants silent! %s!\%u201C!«!g | silent! %s!<<!«!g | silent! %s!>>!»!g | silent! %s!\%u201D!»!g | silent! %s! - !\=' ' . nr2char(8211) . ' '!g | silent! %s!?!\=nr2char(894)!gc
 
+command! FindMarker /\([<=>|]\)\1\{6}/
+
 " Vim doesn't like huge regexes much and there is a 'Press Enter' prompt whose reason I cannot find
 function! FindNumbers()
 	let @/ = '\c\%(\<eight\?\|\<one\|\<ten\>\|eleven\|f\%(i\%(ve\|f\)\|our\)\|hundred\|nine\|s\%(even\|ix\)\|t\%(h\%(ir\|ousand\|ree\)\|w\%(e\%(lve\|n\)\|o\)\)\)\%(teen\|ty\)\?'
