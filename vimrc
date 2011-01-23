@@ -21,8 +21,6 @@ if has( "gui" )
 	autocmd GUIEnter * source <sfile>
 endif
 
-let mapleader=','
-
 " editor behaviour
 set autoindent        " can't live without it
 if has( "&copyindent" )
@@ -347,6 +345,8 @@ nnoremap <Leader><Leader> :call CycleLanguage()<CR>
 
 " plugin- and filetype-specific settings
 "-======================================
+
+let g:repmo_mapmotions = "[s|]s"
 
 " NERD_tree on the left is weird
 let g:NERDTreeWinPos = 'right'
