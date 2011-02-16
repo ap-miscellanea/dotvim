@@ -357,9 +357,7 @@ nnoremap <Leader><Leader> :call CycleLanguage()<CR>
 
 let g:repmo_mapmotions = "[s|]s"
 
-" NERD_tree on the left is weird
-let g:NERDTreeWinPos = 'right'
-nnoremap <F12> :NERDTree<CR>
+nnoremap <F12> :CommandT<CR>
 
 " qbuf hotkey
 let g:qb_hotkey = '<F11>'
