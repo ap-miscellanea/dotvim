@@ -61,7 +61,7 @@ if exists( "&encoding" )
 endif
 if exists( ":filetype" )
 	filetype plugin indent on
-	runtime ftplugin/man.vim " to have :Man available
+	command! -nargs=+ Man delcommand Man | runtime ftplugin/man.vim | Man <args>
 endif
 
 
