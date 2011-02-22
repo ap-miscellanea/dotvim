@@ -203,20 +203,13 @@ onoremap <M-LeftDrag>  <C-C><LeftDrag>
 
 
 " keep current directory synchronised to the basedir of the current buffer,
-" or to its git working tree root directory (with caching),
 " paying special attention to netrw stuff
-let s:chdir_for = {}
-function! AutoChangeDir()
-	if bufname( '' ) =~ '^[[:alnum:]]*://' | return | endif
-	let dir = expand( '%:p:h' )
-	if ! has_key( s:chdir_for, dir )
-		silent! exec 'lcd' dir
-		let git_dir = substitute( system( 'git rev-parse --show-toplevel' ), '\n.*', '', '' )
-		let s:chdir_for[ dir ] = isdirectory( git_dir ) ? git_dir : dir
-	endif
-	if getcwd() != s:chdir_for[ dir ] | silent! exec 'lcd' s:chdir_for[ dir ] | endif
-endfunction
-autocmd BufEnter * call AutoChangeDir()
+if exists( ':lcd' )
+	autocmd BufEnter * if bufname( "" ) !~ '^[[:alnum:]]*://' | silent! exec "lcd" matchstr( expand( '%:p:h' ), '^\(sudo:\)\?\zs.*' ) | endif
+else
+	" good grief, we're riding a dinosaur
+	autocmd BufEnter * if bufname( "" ) !~ '^[[:alnum:]]*://' | cd %:p:h | endif
+endif
 
 function! SudoWrite(file,line1,line2)
 	" intercept the external file change reload prompt event
@@ -357,7 +350,11 @@ nnoremap <Leader><Leader> :call CycleLanguage()<CR>
 
 let g:repmo_mapmotions = "[s|]s [S|]S"
 
-nnoremap <F12> :CommandT<CR>
+function! FileOpenUI()
+	let git_dir = substitute( system( 'git rev-parse --show-toplevel' ), '\n.*', '', '' )
+	exe 'CommandT' isdirectory( git_dir ) ? git_dir : expand( '%:p:h' )
+endfunction
+nnoremap <F12> :call FileOpenUI()<CR>
 
 " qbuf hotkey
 let g:qb_hotkey = '<F11>'
