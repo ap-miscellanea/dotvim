@@ -355,7 +355,7 @@ nnoremap <Leader><Leader> :call CycleLanguage()<CR>
 " plugin- and filetype-specific settings
 "-======================================
 
-let g:repmo_mapmotions = "[s|]s"
+let g:repmo_mapmotions = "[s|]s [S|]S"
 
 nnoremap <F12> :CommandT<CR>
 
