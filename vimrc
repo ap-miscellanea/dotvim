@@ -183,6 +183,7 @@ vnoremap q} s{<C-R>"}<Esc>
 vnoremap q' s'<C-R>"'<Esc>
 vnoremap q" s"<C-R>""<Esc>
 vnoremap q` s`<C-R>"`<Esc>
+vnoremap q<Space> s<Space><C-R>"<Space><Esc>
 
 
 " fast window switching
