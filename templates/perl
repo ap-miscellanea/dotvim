@@ -1,7 +1,6 @@
 #!/usr/bin/perl
+use 5.010;
 use strict;
-use warnings;
-no warnings qw( once qw );
 
 
-# cursor: 6 del
+# cursor: 5 del
