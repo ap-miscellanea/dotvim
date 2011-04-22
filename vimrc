@@ -359,10 +359,10 @@ function! FileOpenUI()
 		exe "norm \e"
 	endif
 endfunction
-nnoremap <F12> :call FileOpenUI()<CR>
+nnoremap <F11> :call FileOpenUI()<CR>
 
 " qbuf hotkey
-let g:qb_hotkey = '<F11>'
+let g:qb_hotkey = '<F12>'
 
 " matchparen slows gvim down noticably
 let g:loaded_matchparen = 1
