@@ -352,6 +352,12 @@ nnoremap <Leader><Leader> :call CycleLanguage()<CR>
 let g:repmo_mapmotions = "[s|]s [S|]S"
 
 function! FileOpenUI()
+	if getcwd() == expand('~')
+		echohl Error
+		echo "Don't try this inside your home directory"
+		echohl None
+		return
+	endif
 	if bufname('') != 'GoToFile'
 		let git_dir = substitute( system( 'git rev-parse --show-toplevel' ), '\n.*', '', '' )
 		exe 'CommandT' isdirectory( git_dir ) ? git_dir : expand( '%:p:h' )
