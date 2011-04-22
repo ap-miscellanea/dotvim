@@ -351,6 +351,10 @@ nnoremap <Leader><Leader> :call CycleLanguage()<CR>
 
 let g:repmo_mapmotions = "[s|]s [S|]S"
 
+" make GIT_DIR absolute based on the pwd at launch,
+" so that changing directories inside vim won't break the reference
+if len( $GIT_DIR ) | let $GIT_DIR = fnamemodify( $GIT_DIR, ':p:h' ) | endif
+
 function! FileOpenUI()
 	if getcwd() == expand('~')
 		echohl Error
