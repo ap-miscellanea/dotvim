@@ -109,7 +109,7 @@ if has( "digraphs" )
 endif
 
 " Esc for quickly clearing the search highlight
-nnoremap <silent> <Esc><Esc> <Esc>:nohlsearch<CR><Esc>
+nnoremap <silent> <Esc><Esc> :nohlsearch<CR>
 
 " missing ZZ and ZQ counterparts:
 " quick save-buffer and quit-everything
