@@ -290,10 +290,11 @@ if has( "perl" ) " wheee!
 		}
 EOF
 
-	command! -range Markdown     perl VIM::Filter( <line1>, <line2>, sub { my $_ = smarten( markdown( shift ), 2 ); s/&#(\d+);/chr $1/eg; return $_ } )
-	command! -range SmartyPants  perl VIM::Filter( <line1>, <line2>, sub { my $_ = smarten( shift, 2 ); s/&#(\d+);/chr $1/eg; return $_ } )
+	command! -range Markdown       perl VIM::Filter( <line1>, <line2>, sub { my $_ = smarten( markdown( shift ), 2 ); s/&#(\d+);/chr $1/eg; return $_ } )
+	command! -range SmartyPants    perl VIM::Filter( <line1>, <line2>, sub { my $_ = smarten( shift, 2 ); s/&#(\d+);/chr $1/eg; return $_ } )
     command! MailPants 0/^$/ , /^-- /-1 SmartyPants
-	command! -range DecodeHTML   perl VIM::Filter( <line1>, <line2>, \&HTML::Entities::decode )
+	command! -range DecodeHTML     perl VIM::Filter( <line1>, <line2>, \&HTML::Entities::decode )
+	command! -range DecodeHTMLSafe perl my @special = qw( amp gt lt quot apos ); local @HTML::Entities::entity2char{ @special } = map "&$_;", @special; VIM::Filter( <line1>, <line2>, \&HTML::Entities::decode )
 endif
 
 command! GreekPants silent! %s!\%u201C!«!g | silent! %s!<<!«!g | silent! %s!>>!»!g | silent! %s!\%u201D!»!g | silent! %s! - !\=' ' . nr2char(8211) . ' '!g | silent! %s!?!\=nr2char(894)!gc
