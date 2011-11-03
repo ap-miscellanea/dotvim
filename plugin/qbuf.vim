@@ -5,7 +5,7 @@ endif
 if !exists("g:qb_hotkey") || g:qb_hotkey == ""
 	let g:qb_hotkey = "<F4>"
 endif
-exe "nnoremap <unique>" g:qb_hotkey " :cal <SID>init(1)<cr>:cal SBRun()<cr>"
+exe "nnoremap <unique>" g:qb_hotkey " :cal <SID>init()<cr>:cal SBRun()<cr>"
 exe "cnoremap <unique>" g:qb_hotkey "<Esc>"
 
 if exists("g:qb_loaded") && g:qb_loaded
@@ -65,7 +65,7 @@ function SBRun()
 
 	if s:blen < 1
 		echoh WarningMsg | echo "No" s:unlisted ? "unlisted" : "listed" "buffer!" | echoh None
-		call s:init(0)
+		call s:uninit()
 		return
 	endif
 	for l:idx in range(s:blen)
@@ -92,40 +92,40 @@ function SBRun()
 			let s:cursel -= 1
 		endif
 	elseif s:update_buf(l:pkey)
-		call s:init(0)
+		call s:uninit()
 		return
 	endif
 	call s:setcmdh(s:blen+1)
 endfunc
 
-function s:init(onStart)
-	if a:onStart
-		set nolazyredraw
-		let s:unlisted = 1 - getbufvar("%", "&buflisted")
-		let s:cursorbg = synIDattr(hlID("Cursor"),"bg")
-		let s:cursorfg = synIDattr(hlID("Cursor"),"fg")
-		let s:cmdh = &cmdheight
-		hi Cursor guibg=NONE guifg=NONE
+function s:init()
+	set nolazyredraw
+	let s:unlisted = 1 - getbufvar("%", "&buflisted")
+	let s:cursorbg = synIDattr(hlID("Cursor"),"bg")
+	let s:cursorfg = synIDattr(hlID("Cursor"),"fg")
+	let s:cmdh = &cmdheight
+	hi Cursor guibg=NONE guifg=NONE
 
-		let s:klist = ["j", "k", "u", "d", "w", "l", "s", "c"]
-		for l:key in s:klist
-			exe "cnoremap ".l:key." ".l:key."<cr>:cal SBRun()<cr>"
-		endfor
-		cmap <up> k
-		cmap <down> j
+	let s:klist = ["j", "k", "u", "d", "w", "l", "s", "c"]
+	for l:key in s:klist
+		exe "cnoremap ".l:key." ".l:key."<cr>:cal SBRun()<cr>"
+	endfor
+	cmap <up> k
+	cmap <down> j
 
-		call s:rebuild()
-		let s:cursel = match(s:buflist, '^\d*\*')
-		call s:setcmdh(s:blen+1)
-	else
-		call s:setcmdh(s:cmdh)
-		for l:key in s:klist
-			exe "cunmap ".l:key
-		endfor
-		cunmap <up>
-		cunmap <down>
-		exe "hi Cursor guibg=" . s:cursorbg . " guifg=".((s:cursorfg == "") ? "NONE" : s:cursorfg)
-	endif
+	call s:rebuild()
+	let s:cursel = match(s:buflist, '^\d*\*')
+	call s:setcmdh(s:blen+1)
+endfunc
+
+function s:uninit()
+	let &cmdheight = s:cmdh
+	for l:key in s:klist
+		exe "cunmap ".l:key
+	endfor
+	cunmap <up>
+	cunmap <down>
+	exe "hi Cursor guibg=" . s:cursorbg . " guifg=".((s:cursorfg == "") ? "NONE" : s:cursorfg)
 endfunc
 
 " return true to indicate termination
@@ -160,10 +160,10 @@ endfunc
 
 function s:setcmdh(height)
 	if a:height > &lines - winnr('$') * (&winminheight+1) - 1
-		call s:init(0)
+		call s:uninit()
 		echo "\r"|echoerr "QBuf E1: No room to display buffer list"
 	else
-		exe "set cmdheight=".a:height
+		let &cmdheight = a:height
 	endif
 endfunc
 
