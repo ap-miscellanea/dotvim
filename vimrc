@@ -447,7 +447,7 @@ if exists( '&filetype' )
 	" automatically enable spellcheck for mails and Markdown documents
 	autocmd FileType {mail,mkd} call SetLanguage('en_gb')
 
-	autocmd FileType mail setlocal expandtab textwidth=65 fencs=utf-8
+	autocmd FileType mail setlocal expandtab textwidth=72 fencs=utf-8
 	autocmd FileType mail if search('^$') | exe 'norm j0' | endif
 
 	" mail.vim links mailSubject to LineNR but that doesn't stand out enough
