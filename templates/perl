@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 use 5.010;
 use strict;
+no indirect ':fatal';
 
 
-# cursor: 5 del
+# cursor: 6 del
