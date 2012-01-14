@@ -244,8 +244,9 @@ if has( "gui_running" )       " has( 'gui' ) alone is insufficient
 
 	let hostname = tolower(split(hostname(),'\.')[0])
 	if "klangraum" == hostname
-		let colorscheme = 'lucius'
 		" XXX: slate is now moria, give it a spin
+		let colorscheme = 'lucius'
+		" XXX also see .pekwm/autoproperties
 		set columns=113 lines=68
 		set guifont=DejaVu\ Sans\ Mono\ 9
 	elseif "heliopause" == hostname
