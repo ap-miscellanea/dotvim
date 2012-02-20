@@ -1,7 +1,8 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 use 5.010;
 use strict;
+use warnings;
 no indirect ':fatal';
 
 
-# cursor: 6 del
+# cursor: 7 del
