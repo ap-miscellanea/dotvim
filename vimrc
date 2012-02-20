@@ -8,6 +8,8 @@ scriptencoding utf-8
 " http://blog.learnr.org/post/59098925/configuring-vim-some-more
 "
 " http://gist.github.com/251482 ?
+"
+" http://yanpritzker.com/2012/01/20/the-cleanest-vimrc-youve-ever-seen/ ?
 
 augroup User
 
