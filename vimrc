@@ -358,28 +358,8 @@ nnoremap <Leader><Leader> :call CycleLanguage()<CR>
 
 let g:repmo_mapmotions = "[s|]s [S|]S"
 
-" make GIT_DIR absolute based on the pwd at launch,
-" so that changing directories inside vim won't break the reference
-if len( $GIT_DIR ) | let $GIT_DIR = fnamemodify( $GIT_DIR, ':p:h' ) | endif
-
-function! FileOpenUI()
-	if getcwd() == expand('~')
-		echohl Error
-		echo "Don't try this inside your home directory"
-		echohl None
-		return
-	endif
-	if bufname('') != 'GoToFile'
-		let git_dir = substitute( system( 'git rev-parse --show-toplevel' ), '\n.*', '', '' )
-		exe 'CommandT' isdirectory( git_dir ) ? git_dir : expand( '%:p:h' )
-	else
-		exe "norm \e"
-	endif
-endfunction
-nnoremap <F11> :call FileOpenUI()<CR>
-
 " qbuf hotkey
-let g:qb_hotkey = '<F12>'
+let g:qb_hotkey = '<F11>'
 
 " matchparen slows gvim down noticably
 let g:loaded_matchparen = 1
