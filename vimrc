@@ -204,6 +204,10 @@ noremap  <M-LeftDrag>  <LeftDrag>
 inoremap <M-LeftDrag>  <LeftDrag>
 onoremap <M-LeftDrag>  <C-C><LeftDrag>
 
+if has( 'wildmenu' )
+	set wildmenu
+	set wildmode=longest:full,list:full
+endif
 
 " keep current directory synchronised to the basedir of the current buffer,
 " paying special attention to netrw stuff
