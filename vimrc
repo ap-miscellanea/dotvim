@@ -358,11 +358,6 @@ nnoremap <Leader><Leader> :call CycleLanguage()<CR>
 
 let g:repmo_mapmotions = "[s|]s [S|]S"
 
-let g:ctrlp_user_command = ['.git/', 'cd %s && git ls-files']
-let g:ctrlp_custom_ignore = '\.git$\|\.hg$\|\.svn$'
-let g:ctrlp_clear_cache_on_exit = 1
-let g:ctrlp_map = '<F12>'
-
 " qbuf hotkey
 let g:qb_hotkey = '<F11>'
 
