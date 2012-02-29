@@ -221,6 +221,8 @@ function! ChangeToDirFromBuffer()
 endfunction
 autocmd BufEnter * call ChangeToDirFromBuffer()
 
+nnoremap <Leader>e :e <C-R>=expand('%:h')<CR>/
+
 function! SudoWrite(file,line1,line2)
 	" intercept the external file change reload prompt event
 	autocmd FileChangedShell <buffer> :
