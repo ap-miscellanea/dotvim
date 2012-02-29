@@ -214,8 +214,10 @@ endif
 function! ChangeToDirFromBuffer()
 	if bufname( '' ) =~ '://' | return | endif
 	lcd %:p:h
-	let git_dir = substitute( system( 'git rev-parse --show-toplevel' ), '\n.*', '', '' )
-	if isdirectory( git_dir ) | exe 'lcd' git_dir | endif
+	if ! has( "win32" )
+		let git_dir = substitute( system( 'git rev-parse --show-toplevel' ), '\n.*', '', '' )
+		if isdirectory( git_dir ) | exe 'lcd' git_dir | endif
+	endif
 endfunction
 autocmd BufEnter * call ChangeToDirFromBuffer()
 
