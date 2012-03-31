@@ -1,7 +1,17 @@
 set nocompatible
 scriptencoding utf-8
 
+if has( 'menu' )
+	" sets up bookmarks menu if none yet
+	exe 'amenu Book&marks.&Settings :e' expand( '<sfile>' ) . '<CR>'
+endif
+
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " editor behaviour
+"
+
 set autoindent        " can't live without it
 if has( "&copyindent" )
 	set copyindent    " stick to the file's existing indentation format for new indented lines
@@ -44,7 +54,12 @@ if exists( ':filetype' )
 	filetype plugin indent on
 endif
 
-" display setup
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" basic display setup
+"
+
 syntax enable
 set incsearch           " incremental search is convenient
 set hlsearch            " ... and search highlighting helpful
@@ -65,6 +80,21 @@ set lazyredraw          " speed up macros
 set noerrorbells        " shut up
 set visualbell          " shut up
 set t_vb=               " no really, shut up
+
+if exists( '&filetype' )
+	" disable wrapping in most any particular format
+	" but enable it in email, Markdown, XML and X?HTML
+	" NB: this needs to be done here and this way so regular text files
+	" (which have no file type) will have the default wrapping enabled
+	autocmd FileType * setlocal nowrap | setlocal list
+	autocmd FileType {mail,mkd,xml,xhtml,html} setlocal wrap | setlocal nolist
+endif
+
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" mappings
+"
 
 " Esc for quickly clearing the search highlight
 nnoremap <silent> <Esc><Esc> :nohlsearch<CR>
@@ -88,7 +118,6 @@ nnoremap <C-K> <C-W>k
 nnoremap <C-N> :bnext<CR>
 nnoremap <C-P> :bprev<CR>
 
-
 " Alt-LeftMouse for visual block selections
 noremap  <M-LeftMouse> <4-LeftMouse>
 inoremap <M-LeftMouse> <4-LeftMouse>
@@ -96,18 +125,3 @@ onoremap <M-LeftMouse> <C-C><4-LeftMouse>
 noremap  <M-LeftDrag>  <LeftDrag>
 inoremap <M-LeftDrag>  <LeftDrag>
 onoremap <M-LeftDrag>  <C-C><LeftDrag>
-
-
-" bookmarks
-if has( "menu" )
-	exec 'amenu Book&marks.&Settings :e' expand( '<sfile>' ) . '<CR>'
-endif
-
-if exists( '&filetype' )
-	" disable wrapping in most any particular format
-	" but enable it in email, Markdown, XML and X?HTML
-	" NB: this needs to be done here and this way so regular text files
-	" (which have no file type) will have the default wrapping enabled
-	autocmd FileType * setlocal nowrap | setlocal list
-	autocmd FileType {mail,mkd,xml,xhtml,html} setlocal wrap | setlocal nolist
-endif
