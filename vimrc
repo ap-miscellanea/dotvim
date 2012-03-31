@@ -256,14 +256,6 @@ if exists( '&filetype' )
 	autocmd FileType * setlocal nowrap | setlocal list
 	autocmd FileType {mail,mkd,xml,xhtml,html} setlocal wrap | setlocal nolist
 
-	" use internal help when editing vim scripts or viewing help
-	autocmd FileType {vim,help} setlocal keywordprg=:help
-
-	" easier help browsing
-	autocmd FileType help nnoremap <buffer><CR> <C-]>
-	autocmd FileType help nnoremap <buffer><BS> <C-T>
-	autocmd FileType help nnoremap <buffer><Tab> :call search('<Bar>\zs\k*\ze<Bar>')<CR>:echo<CR>
-
 	" XML = nesting, which makes 4 places per tab way too much
 	" also, make it possible to autocomplete tag names with hyphens in them
 	autocmd FileType {xml,xslt} setlocal ts=2 sw=2 sts=2 iskeyword=@,-,\:,48-57,_,128-167,224-235
