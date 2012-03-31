@@ -270,21 +270,6 @@ if exists( '&filetype' )
 	" automatically enable spellcheck for mails and Markdown documents
 	autocmd FileType {mail,mkd} call SetLanguage('en_gb')
 
-	autocmd FileType mail setlocal expandtab textwidth=72 fencs=utf-8
-	autocmd FileType mail if search('^$') | exe 'norm j0' | endif
-
-	" mail.vim links mailSubject to LineNR but that doesn't stand out enough
-	autocmd FileType mail hi link mailSubject PreProc
-
-	" when saving mail, remove trailing whitespace from all lines except sig markers
-	autocmd FileType mail autocmd BufWritePre <buffer> let s:saveview = winsaveview() | silent! %s:\(^--\)\@<! \+$:: | call winrestview(s:saveview) | unlet s:saveview
-
-	" nicer From: line for my emails: if it's a `mail` buffer, then before
-	" saving, find the first signature in the buffer, find the name in full
-	" within it, and use that to replace the 'A.' on the From: line
-	autocmd FileType mail autocmd BufWritePre <buffer> let s:saveview = winsaveview() | silent! 1,/^\n/s!^From:.*\zsA\.\ze Pagaltzis!\= filter( [ matchstr( matchstr( join( getline(1,'$'), "\r" ), '\v\r-- \r\zs([^\r]+(\r|$))*' ), '\v(Aristot(le|eles)|Αριστοτέλης)' ), 'A.' ], 'len(v:val) > 0' )[0] !e | call winrestview(s:saveview) | unlet s:saveview
-	autocmd FileType mail autocmd BufWritePre <buffer> let s:saveview = winsaveview() | silent! 1,/^\n/s!^From:.*\zsPagaltzis!\= filter( [ matchstr( matchstr( join( getline(1,'$'), "\r" ), '\v\r-- \r\zs([^\r]+(\r|$))*' ), 'Παγκαλτζής' ), 'Pagaltzis' ], 'len(v:val) > 0' )[0] !e | call winrestview(s:saveview) | unlet s:saveview
-
 endif
 
 augroup END
