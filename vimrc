@@ -16,13 +16,6 @@ augroup User
 " safeguard for re-sourcing
 autocmd!
 
-" HACK: I don't want a .gvimrc but some stuff gets reset during GUI init,
-" therefore re-source .vimrc at GUI start.
-" Unfortunately re-sourcing isn't inherently idempotent, so gotta be careful
-if has( "gui" )
-	autocmd GUIEnter * source <sfile>
-endif
-
 " editor behaviour
 set autoindent        " can't live without it
 if has( "&copyindent" )
@@ -198,49 +191,6 @@ function! SudoWrite(file,line1,line2)
 	if a:line1 == 1 && a:line2 == line('$') | set nomodified | endif
 endfunction
 command! -range=% -nargs=? -complete=file Sudo call SudoWrite(<q-args>,<q-line1>,<q-line2>)
-
-" gooey settings
-if has( "gui_running" )       " has( 'gui' ) alone is insufficient
-	set guioptions-=t         " no tear-off menu items
-	set guioptions-=T         " no toolbar
-	set guioptions+=c         " use cmdline prompt instead of dialog windows for confirmation
-	set guicursor+=a:blinkon0 " turn off cursor blinking
-	set guitablabel=%N\ %t    " simpler tab labels than default
-
-	if has( "gui_win32" )
-		nnoremap <M-Space> :simalt ~<CR>
-		inoremap <M-Space> <C-o>:simalt ~<CR>
-		try | set guifont=Consolas:h8:cANSI | catch | set guifont=Andale_Mono:h8:cANSI | endtry
-	elseif has( "gui_mac" )
-		set guifont=Menlo:h13
-	endif
-
-	let colorscheme = 'desert'
-
-	let hostname = tolower(split(hostname(),'\.')[0])
-	if "klangraum" == hostname
-		" XXX: slate is now moria, give it a spin
-		let colorscheme = 'lucius'
-		" XXX also see .pekwm/autoproperties
-		set columns=113 lines=68
-		set guifont=DejaVu\ Sans\ Mono\ 9
-	elseif "heliopause" == hostname
-		set columns=110 lines=60
-	elseif "apastron" == hostname
-		let colorscheme = 'lucius'
-		set columns=110 lines=35
-	else
-		set columns=110 lines=35
-	endif
-
-	exe 'colorscheme' colorscheme
-else
-	set t_Co=256
-	if exists( ":colorscheme" )
-		try | colorscheme railscasts | catch | colorscheme default | endtry
-	endif
-endif
-
 
 " bookmarks
 if has( "menu" )
