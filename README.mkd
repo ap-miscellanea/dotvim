@@ -1,10 +1,7 @@
 This is the content of my `~/.vim` directory. What do you do not see
-here is my `~/.vimrc`. I do not make it a symlink to the `vimrc` file
-in here. Rather, it is a script as well, one that simply ends with the
-following line:
+here is my `~/.vimrc`, because there isn’t one. All my settings are in
+`plugin/settings`, some extra gizmos are in `plugin/gizmos`, and some
+filetype-specific settings are in `after/ftplugin`.
 
-    runtime vimrc
-
-That causes the `vimrc` from this directory to be loaded. That way
-I have a place to keep non-public or very machine-specific bits of
-configuration.
+(Actually, I do have a `~/.vimrc`, but it is short and not versioned.
+I keep keep non-public or very machine-specific configuration there.)

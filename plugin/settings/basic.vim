@@ -100,7 +100,7 @@ onoremap <M-LeftDrag>  <C-C><LeftDrag>
 
 " bookmarks
 if has( "menu" )
-	exec 'amenu Book&marks.&vimrc :e' expand( '<sfile>' ) . '<CR>'
+	exec 'amenu Book&marks.&Settings :e' expand( '<sfile>' ) . '<CR>'
 endif
 
 if exists( '&filetype' )
