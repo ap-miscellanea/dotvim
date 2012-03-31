@@ -88,8 +88,6 @@ set noerrorbells        " shut up
 set visualbell          " shut up
 set t_vb=               " no really, shut up
 
-runtime macros/matchit.vim
-
 " Esc for quickly clearing the search highlight
 nnoremap <silent> <Esc><Esc> :nohlsearch<CR>
 
