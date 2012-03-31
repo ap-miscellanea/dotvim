@@ -298,9 +298,6 @@ nnoremap <Leader><Leader> :call CycleLanguage()<CR>
 " plugin- and filetype-specific settings
 "-======================================
 
-" qbuf hotkey
-let g:qb_hotkey = '<F11>'
-
 if has( "gui_win32" )
 	let g:netrw_cygwin = 0
 	let g:netrw_ssh_cmd  = 'C:\Programme\PuTTY\plink.exe'
