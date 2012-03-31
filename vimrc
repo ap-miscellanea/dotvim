@@ -265,8 +265,6 @@ if exists( '&filetype' )
 	" regular autoindent works better for me
 	autocmd FileType {html,xml} setlocal indentexpr=
 
-	autocmd FileType crontab setlocal tabstop=11 softtabstop=11 shiftwidth=11 noexpandtab
-
 	" automatically enable spellcheck for mails and Markdown documents
 	autocmd FileType {mail,mkd} call SetLanguage('en_gb')
 
