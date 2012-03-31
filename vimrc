@@ -298,8 +298,6 @@ nnoremap <Leader><Leader> :call CycleLanguage()<CR>
 " plugin- and filetype-specific settings
 "-======================================
 
-let g:repmo_mapmotions = "[s|]s [S|]S"
-
 " qbuf hotkey
 let g:qb_hotkey = '<F11>'
 
