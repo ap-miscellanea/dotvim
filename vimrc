@@ -260,8 +260,6 @@ if exists( '&filetype' )
 	" also, make it possible to autocomplete tag names with hyphens in them
 	autocmd FileType {xml,xslt} setlocal ts=2 sw=2 sts=2 iskeyword=@,-,\:,48-57,_,128-167,224-235
 
-	autocmd FileType python setlocal expandtab
-
 	autocmd FileType html setlocal makeprg=tidy\ -q\ %\ 2>&1\ \\\|\ grep\ ^line errorformat+=line\ %l\ column\ %*\\d\ -\ %m
 
 	" regular autoindent works better for me
