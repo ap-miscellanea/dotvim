@@ -298,9 +298,6 @@ nnoremap <Leader><Leader> :call CycleLanguage()<CR>
 " plugin- and filetype-specific settings
 "-======================================
 
-" for Perl syntax
-let g:perl_include_pod = 1 " include POD syntax highlighting
-
 if exists( '&filetype' )
 	" disable wrapping in most any particular format
 	" but enable it in email, Markdown, XML and X?HTML
