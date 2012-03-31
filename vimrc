@@ -256,15 +256,6 @@ if exists( '&filetype' )
 	autocmd FileType * setlocal nowrap | setlocal list
 	autocmd FileType {mail,mkd,xml,xhtml,html} setlocal wrap | setlocal nolist
 
-	" XML = nesting, which makes 4 places per tab way too much
-	" also, make it possible to autocomplete tag names with hyphens in them
-	autocmd FileType {xml,xslt} setlocal ts=2 sw=2 sts=2 iskeyword=@,-,\:,48-57,_,128-167,224-235
-
-	autocmd FileType html setlocal makeprg=tidy\ -q\ %\ 2>&1\ \\\|\ grep\ ^line errorformat+=line\ %l\ column\ %*\\d\ -\ %m
-
-	" regular autoindent works better for me
-	autocmd FileType {html,xml} setlocal indentexpr=
-
 	" automatically enable spellcheck for mails and Markdown documents
 	autocmd FileType {mail,mkd} call SetLanguage('en_gb')
 
