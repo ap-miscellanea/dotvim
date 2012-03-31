@@ -270,9 +270,6 @@ if exists( '&filetype' )
 
 	autocmd FileType python setlocal expandtab
 
-	" inexplicable omission; necessary so CSS color highlighting will work right
-	autocmd FileType css  setlocal iskeyword+=-
-
 	autocmd FileType html setlocal makeprg=tidy\ -q\ %\ 2>&1\ \\\|\ grep\ ^line errorformat+=line\ %l\ column\ %*\\d\ -\ %m
 
 	" regular autoindent works better for me
