@@ -11,11 +11,6 @@ scriptencoding utf-8
 "
 " http://yanpritzker.com/2012/01/20/the-cleanest-vimrc-youve-ever-seen/ ?
 
-augroup User
-
-" safeguard for re-sourcing
-autocmd!
-
 " editor behaviour
 set autoindent        " can't live without it
 if has( "&copyindent" )
@@ -118,11 +113,6 @@ if has( "menu" )
 	exec 'amenu Book&marks.&vimrc :e' expand( '<sfile>' ) . '<CR>'
 endif
 
-
-
-" plugin- and filetype-specific settings
-"-======================================
-
 if exists( '&filetype' )
 	" disable wrapping in most any particular format
 	" but enable it in email, Markdown, XML and X?HTML
@@ -131,5 +121,3 @@ if exists( '&filetype' )
 	autocmd FileType * setlocal nowrap | setlocal list
 	autocmd FileType {mail,mkd,xml,xhtml,html} setlocal wrap | setlocal nolist
 endif
-
-augroup END
