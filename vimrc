@@ -303,10 +303,6 @@ let g:repmo_mapmotions = "[s|]s [S|]S"
 " qbuf hotkey
 let g:qb_hotkey = '<F11>'
 
-" for Michal Gorny's improved syntax/xhtml.vim
-let g:xhtml_no_embedded_mathml = 1
-let g:xhtml_no_embedded_svg = 1
-
 if has( "gui_win32" )
 	let g:netrw_cygwin = 0
 	let g:netrw_ssh_cmd  = 'C:\Programme\PuTTY\plink.exe'
