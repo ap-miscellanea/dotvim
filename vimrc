@@ -125,15 +125,6 @@ nnoremap ZD :bd<CR>
 " better granularity for undoing insert mode work
 inoremap <C-W>   <C-G>u<C-W>
 
-" " XXX: the motivation for the following undo cycle breakers was to avoid the
-" " occasional loss of large inserts due to accidental edits erasing the redo
-" " list after undo. With undo branches in Vim 7 the premise of lost redos is
-" " void.
-" inoremap <CR>    <C-G>u<CR>
-" inoremap <Space> <C-G>u<Space>
-" inoremap <BS>    <C-G>u<BS>
-" inoremap <Del>   <C-G>u<Del>
-
 
 
 " experimental: easier typing and deleting of delimiter pairs
