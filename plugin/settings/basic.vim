@@ -37,7 +37,7 @@ set history=2000      " 100x the default
 set undolevels=5000   " 5x the default
 set shortmess+=mrI    " supress intro message, shorten flags [Modified] and [readonly]
 set shortmess-=tT     " don't truncate file messages
-" FIXME FIXME FIXME set viminfo
+set viminfo='10000,<50,s10000,h
 
 " Make vim work with the 'crontab -e' command
 set backupskip+=/var/spool/cron/*
