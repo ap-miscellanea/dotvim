@@ -298,16 +298,6 @@ nnoremap <Leader><Leader> :call CycleLanguage()<CR>
 " plugin- and filetype-specific settings
 "-======================================
 
-if has( "gui_win32" )
-	let g:netrw_cygwin = 0
-	let g:netrw_ssh_cmd  = 'C:\Programme\PuTTY\plink.exe'
-	let g:netrw_scp_cmd  = 'C:\Programme\PuTTY\pscp.exe -batch -q -scp'
-	let g:netrw_sftp_cmd = 'C:\Programme\PuTTY\pscp.exe -batch -q -sftp'
-else
-	" some silly servers refuse to respond to user agents that they assume to be spiders
-	let g:netrw_http_cmd  = "wget -U 'Vim " . v:version / 100 . "." . v:version % 100 . " (netrw)' -O"
-endif
-
 " for Perl syntax
 let g:perl_include_pod = 1 " include POD syntax highlighting
 
