@@ -61,11 +61,10 @@ if exists( "&encoding" )
 	set encoding=utf-8                      " use UTF-8 internally
 	set fileencodings=ucs-bom,utf-8,cp1252  " assume files are UTF-8; if that fails, use Latin1
 endif
-if exists( ":filetype" )
-	filetype plugin indent on
-	command! -nargs=+ Man delcommand Man | runtime ftplugin/man.vim | Man <args>
-endif
 
+if exists( ':filetype' )
+	filetype plugin indent on
+endif
 
 " display setup
 syntax enable
@@ -250,37 +249,6 @@ if has( "menu" )
 	exec 'amenu Book&marks.&vimrc :e' expand( '<sfile>' ) . '<CR>'
 endif
 
-
-if has( "perl" ) " wheee!
-	perl eval 'use Encode;'
-	perl eval 'use HTML::Entities;'
-	perl eval 'use Text::Markdown qw(markdown);'
-	perl eval 'use Text::SmartyPants; *smarten = \&Text::SmartyPants::process;'
-	perl << EOF
-		sub VIM::Filter {
-			my ( $start, $end, $func ) = @_;
-			my $encoding = VIM::Eval( '&fileencoding' ) || VIM::Eval( '&encoding' );
-			my $text = join '', map "$_\n", map { decode $encoding, $_ } $curbuf->Get( $start .. $end );
-			my @filtered = $func->( $text );
-			chomp @filtered;
-			$curbuf->Delete( $start + 1, $end ) if $end > $start;
-			$curbuf->Append( $start, map { split m!$/!, $_, -1 } @filtered );
-			$curbuf->Delete( $start );
-		}
-EOF
-
-	command! -range Markdown       perl VIM::Filter( <line1>, <line2>, sub { my $_ = smarten( markdown( shift ), 2 ); s/&#(\d+);/chr $1/eg; return $_ } )
-	command! -range SmartyPants    perl VIM::Filter( <line1>, <line2>, sub { my $_ = smarten( shift, 2 ); s/&#(\d+);/chr $1/eg; return $_ } )
-    command! MailPants 0/^$/ , /^-- /-1 SmartyPants
-	command! -range DecodeHTML     perl VIM::Filter( <line1>, <line2>, \&HTML::Entities::decode )
-	command! -range DecodeHTMLSafe perl my @special = qw( amp gt lt quot apos ); local @HTML::Entities::entity2char{ @special } = map "&$_;", @special; VIM::Filter( <line1>, <line2>, \&HTML::Entities::decode )
-endif
-
-command! GreekPants silent! %s!\%u201C!«!g | silent! %s!<<!«!g | silent! %s!>>!»!g | silent! %s!\%u201D!»!g | silent! %s! - !\=' ' . nr2char(8211) . ' '!g | silent! %s!?!\=nr2char(894)!gc
-
-command! FindMarker /\([<=>|]\)\1\{6}/
-
-command! -range TidyHTML <line1>,<line2>!tidy -q -utf8 -config ~/.tidy.conf.unintrusive
 
 " Vim doesn't like huge regexes much: there is a 'Press Enter' prompt whose reason I cannot find
 function! FindNumbers()
