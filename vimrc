@@ -260,14 +260,6 @@ if exists( '&filetype' )
 	" also, make it possible to autocomplete tag names with hyphens in them
 	autocmd FileType {xml,xslt} setlocal ts=2 sw=2 sts=2 iskeyword=@,-,\:,48-57,_,128-167,224-235
 
-	" miscellany for Perl
-	autocmd FileType perl setlocal iskeyword+=: makeprg=perl\ -Wc\ % errorformat=%m\ at\ %f\ line\ %l%.%#,%-G%.%#
-	if has( "win32" )
-		" Vim uses a temp file in Windows; Perl's stderr has to be handled corectly
-		autocmd FileType perl setlocal shellpipe=1>&2\ 2>
-	endif
-	autocmd FileType perl setlocal keywordprg=sh\ -c\ 'perldoc\ -f\ \$1\ \|\|\ perldoc\ \$1'\ --
-
 	autocmd FileType python setlocal expandtab
 
 	autocmd FileType html setlocal makeprg=tidy\ -q\ %\ 2>&1\ \\\|\ grep\ ^line errorformat+=line\ %l\ column\ %*\\d\ -\ %m
