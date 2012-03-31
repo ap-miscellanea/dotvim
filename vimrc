@@ -1,16 +1,6 @@
 set nocompatible
 scriptencoding utf-8
 
-" TODO
-" :help auto-format " for mail?
-" 
-" http://items.sjbach.com/319/configuring-vim-right
-" http://blog.learnr.org/post/59098925/configuring-vim-some-more
-"
-" http://gist.github.com/251482 ?
-"
-" http://yanpritzker.com/2012/01/20/the-cleanest-vimrc-youve-ever-seen/ ?
-
 " editor behaviour
 set autoindent        " can't live without it
 if has( "&copyindent" )
