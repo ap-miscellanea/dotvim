@@ -313,12 +313,6 @@ else
 	let g:netrw_http_cmd  = "wget -U 'Vim " . v:version / 100 . "." . v:version % 100 . " (netrw)' -O"
 endif
 
-" for :TOhtml
-let g:html_use_css = 1
-let g:use_xhtml = 1
-let g:html_number_lines = 1
-let g:html_use_encoding = "utf-8"
-
 " for Perl syntax
 let g:perl_include_pod = 1 " include POD syntax highlighting
 
