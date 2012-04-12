@@ -1,1 +1,1 @@
-let g:qb_hotkey = '<F11>'
+let g:qb_hotkey = '<F12>'
