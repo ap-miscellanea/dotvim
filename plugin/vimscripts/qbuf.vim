@@ -1,190 +1,224 @@
-if v:version < 700
-	finish
-endif
+if v:version < 700 | finish | endif
+if exists('g:qbuf_loaded') && g:qbuf_loaded | finish | endif
+let g:qbuf_loaded = 1
 
-if !exists("g:qb_hotkey") || g:qb_hotkey == ""
-	let g:qb_hotkey = "<F4>"
-endif
-exe "nnoremap <unique>" g:qb_hotkey " :cal <SID>init()<cr>:cal SBRun()<cr>"
-exe "cnoremap <unique>" g:qb_hotkey "<Esc>"
+function s:run()
+	" SETUP =================================================================
 
-if exists("g:qb_loaded") && g:qb_loaded
-	finish
-endif
-let g:qb_loaded = 1
-
-let s:action2cmd = {"z": 'call <SID>switchbuf(#,"")', "!z": 'call <SID>switchbuf(#,"!")',
-			\"u": "hid b #|let s:cursel = (s:cursel+1) % s:blen",
-			\"s": "sb #",
-			\"d": 'call <SID>qbufdcmd(#,"")', "!d": 'call <SID>qbufdcmd(#,"!")',
-			\"w": "bw #", "!w": "bw! #",
-			\"l": "let s:unlisted = 1 - s:unlisted",
-			\"c": 'call <SID>closewindow(#,"")'}
-
-function s:rebuild()
-	redir @y | silent ls! | redir END
-	let s:buflist = []
-	let s:blen = 0
-
-	for l:theline in split(@y,"\n")
-		if s:unlisted && l:theline[3] == "u" && (l:theline[6] != "-" || l:theline[5] != " ")
-					\ || !s:unlisted && l:theline[3] != "u"
-			if s:unlisted
-				let l:moreinfo = substitute(l:theline[5], "[ah]", " [+]", "")
-			else
-				let l:moreinfo = substitute(l:theline[7], "+", " [+]", "")
-			endif
-			let s:blen += 1
-			let l:fname = matchstr(l:theline, '"\zs[^"]*')
-			let l:bufnum = matchstr(l:theline, '^ *\zs\d*')
-
-			if l:bufnum == bufnr('')
-				let l:active = '* '
-			elseif bufwinnr(str2nr(l:bufnum)) > 0
-				let l:active = '= '
-			else
-				let l:active = '  '
-			endif
-
-			call add(s:buflist, s:blen . l:active
-				\.fnamemodify(l:fname,":t") . l:moreinfo
-				\." <" . l:bufnum . "> "
-				\.fnamemodify(l:fname,":h"))
-		endif
-	endfor
-
-	let l:alignsize = max(map(copy(s:buflist),'stridx(v:val,">")'))
-	call map(s:buflist, 'substitute(v:val, " <", repeat(" ",l:alignsize-stridx(v:val,">"))." <", "")')
-	call map(s:buflist, 'strpart(v:val, 0, &columns-3)')
-endfunc
-
-function SBRun()
-	if !exists("s:cursel") || (s:cursel >= s:blen) || (s:cursel < 0)
-		let s:cursel = s:blen-1
-	endif
-
-	if s:blen < 1
-		echoh WarningMsg | echo "No" s:unlisted ? "unlisted" : "listed" "buffer!" | echoh None
-		call s:uninit()
-		return
-	endif
-	for l:idx in range(s:blen)
-		if l:idx != s:cursel
-			echo "  " . s:buflist[l:idx]
-		else
-			echoh DiffText | echo "> " . s:buflist[l:idx] | echoh None
-		endif
-	endfor
-
-	if s:unlisted
-		echoh WarningMsg
-	endif
-	let l:pkey = input(s:unlisted ? "UNLISTED ([+] loaded):" : "LISTED ([+] modified):" , " ")
-	if s:unlisted
-		echoh None
-	endif
-	if l:pkey =~ "j$"
-		let s:cursel = (s:cursel+1) % s:blen
-	elseif l:pkey =~ "k$"
-		if s:cursel == 0
-			let s:cursel = s:blen - 1
-		else
-			let s:cursel -= 1
-		endif
-	elseif s:update_buf(l:pkey)
-		call s:uninit()
-		return
-	endif
-	call s:setcmdh(s:blen+1)
-endfunc
-
-function s:init()
-	set nolazyredraw
-	let s:unlisted = 1 - getbufvar("%", "&buflisted")
-	let s:cursorbg = synIDattr(hlID("Cursor"),"bg")
-	let s:cursorfg = synIDattr(hlID("Cursor"),"fg")
-	let s:cmdh = &cmdheight
+	let l:unlisted = 1 - getbufvar('%', '&buflisted')
+	let l:cursorbg = synIDattr(hlID('Cursor'),'bg')
+	let l:cursorfg = synIDattr(hlID('Cursor'),'fg')
 	hi Cursor guibg=NONE guifg=NONE
 
-	let s:klist = ["j", "k", "u", "d", "w", "l", "s", "c"]
-	for l:key in s:klist
-		exe "cnoremap ".l:key." ".l:key."<cr>:cal SBRun()<cr>"
-	endfor
-	cmap <up> k
-	cmap <down> j
+	let l:lazyredraw = &lazyredraw
+	set nolazyredraw
 
-	call s:rebuild()
-	let s:cursel = match(s:buflist, '^\d*\*')
-	call s:setcmdh(s:blen+1)
-endfunc
+	let l:cmdheight = &cmdheight
 
-function s:uninit()
-	let &cmdheight = s:cmdh
-	for l:key in s:klist
-		exe "cunmap ".l:key
-	endfor
-	cunmap <up>
-	cunmap <down>
-	exe "hi Cursor guibg=" . s:cursorbg . " guifg=".((s:cursorfg == "") ? "NONE" : s:cursorfg)
-endfunc
+	let l:bang    = ''
+	let l:cursel  = -1
+	let l:refresh =  1
 
-" return true to indicate termination
-function s:update_buf(cmd)
-	if a:cmd != "" && a:cmd =~ '^ *\d*!\?\a\?$'
-		let l:bufidx = str2nr(a:cmd) - 1
-		if l:bufidx == -1
-			let l:bufidx = s:cursel
-		endif
+	try | while 1
+		" SCAN ===============================================================
 
-		let l:action = matchstr(a:cmd, '!\?\a\?$')
-		if l:action == "" || l:action == "!"
-			let l:action .= "z"
-		endif
+		if l:refresh
+			redir => l:ls
+			silent ls!
+			redir END
 
-		if l:bufidx >= 0 && l:bufidx < s:blen && has_key(s:action2cmd, l:action)
-			try
-				exe substitute(s:action2cmd[l:action], "#", matchstr(s:buflist[l:bufidx], '<\zs\d\+\ze>'), "g")
-				if l:action[-1:] != "z"
-					call s:rebuild()
+			let l:buffers = []
+
+			for l:line in split(l:ls, "\n")
+				" see  :help ls  for the string format parsed here
+
+				let l:line_unlisted = l:line[3] == 'u'
+				if l:unlisted != l:line_unlisted | continue | endif
+
+				let l:line_active   = l:line[5] =~ '[ah]'
+				let l:line_nomodif  = l:line[6] != '-'
+				let l:line_modified = l:line[7] == '+'
+
+				if l:unlisted
+					if l:line_nomodif && !l:line_active | continue | endif
 				endif
-			catch
-				echoh ErrorMsg | echo "\rVIM" matchstr(v:exception, '^Vim(\a*):\zs.*') | echoh None
-				if l:action[-1:] != "z"
-					call inputsave() | call getchar() | call inputrestore()
-				endif
-			endtry
+
+				let l:line_num   = str2nr(l:line)
+				let l:line_fname = matchstr(l:line, '"\zs[^"]*')
+
+				call add(l:buffers, {
+					\'idx' : len(l:buffers),
+					\'num' : l:line_num,
+					\'vis' : bufwinnr(l:line_num) > 0 ? '[]' : '  ',
+					\'name': fnamemodify(l:line_fname, ':t'),
+					\'path': fnamemodify(l:line_fname, ':h'),
+					\'info': l:unlisted ? (l:line_active ? '[L]' : '') : (l:line_modified ? '[+]' : '')})
+			endfor
+
+			unlet l:ls
+
+			let l:idxwidth  = len(l:buffers) ? strlen(l:buffers[-1]['idx']) + l:unlisted : 0
+			let l:numwidth  = max(map(copy(l:buffers),'strlen(v:val["num"])'))
+			let l:namewidth = max(map(copy(l:buffers),'strlen(v:val["name"])'))
+			let l:pathwidth = max(map(copy(l:buffers),'strlen(v:val["path"])'))
 		endif
-	endif
-	return index(s:klist, a:cmd[-1:]) == -1
+
+		let l:refresh = 1
+
+		" DRAW ===============================================================
+
+		set cmdheight=1 " vim doesn't draw the menu properly otherwise
+
+		if len(l:buffers) < 1 " probably no unlisted buffers
+			let l:unlisted = 1 - l:unlisted " switch mode to try again
+			continue
+		endif
+
+		if &cmdheight != len(l:buffers)
+			let &cmdheight = len(l:buffers)
+
+			if &cmdheight < len(l:buffers)
+				set cmdheight=1
+				redraw
+				echohl ErrorMsg
+				echo 'No room to display buffer list'
+				echohl None
+				break
+			endif
+		endif
+
+		let l:curbuf = bufnr('')
+
+		for l:buf in l:buffers
+			let l:idx = l:buf['idx']
+
+			if l:cursel == -1 && l:buf['num'] == l:curbuf
+				let l:cursel = l:idx
+			endif
+
+			let l:line = printf(' %*s: %1s %s%*d%s %-*s %3s %-*s ',
+				\l:idxwidth,
+				\(l:unlisted ? 'U' : '') . (l:idx+1),
+				\l:buf['num'] == l:curbuf ? '*' : '',
+				\l:buf['vis'][0:0],
+				\l:numwidth,
+				\l:buf['num'],
+				\l:buf['vis'][1:1],
+				\l:namewidth,
+				\l:buf['name'],
+				\l:buf['info'],
+				\l:pathwidth,
+				\l:buf['path'])
+
+			exe 'echohl' l:idx == l:cursel ? 'PmenuSel' : 'Pmenu'
+			echo strpart(l:line, 0, &columns-2).' '
+			echohl None
+		endfor
+
+		redraw
+
+		" INPUT ==============================================================
+
+		let l:key = getchar()
+
+		" DISPATCH ===========================================================
+
+		if type(l:key) == type(0)
+			let l:key = nr2char(l:key)
+		end
+
+		if     l:key == "\<Up>"   | let l:key = 'k'
+		elseif l:key == "\<Down>" | let l:key = 'j'
+		elseif l:key == "\<Esc>"  | let l:key = 'q'
+		end
+
+		let l:selbuf = l:buffers[l:cursel]['num']
+		let l:selwin = bufwinnr(l:selbuf)
+
+		try
+			if l:key == '!'
+				let l:bang = l:bang ? '' : '!'
+				let l:refresh = 0
+
+			elseif l:key == 'k' " up
+				let l:cursel -= 1
+				let l:refresh = 0
+				let l:bang = ''
+
+			elseif l:key == 'j' " down
+				let l:cursel += 1
+				let l:refresh = 0
+				let l:bang = ''
+
+			elseif l:key == 'u' " hide
+				let l:cursel += 1
+				exe 'hide buffer' l:selbuf
+				let l:bang = ''
+
+			elseif l:key == 's' " split
+				exe 'sbuffer' l:selbuf
+				let l:bang = ''
+
+			elseif l:key == 'w' " wipeout
+				exe 'bwipeout' l:selbuf
+				let l:bang = ''
+
+			elseif l:key == 'l' " toggle to un-/listed buffers
+				let l:unlisted = 1 - l:unlisted
+				let l:cursel = 0
+				let l:bang = ''
+
+			elseif l:key == 'c' " close
+				if l:selwin == -1
+					let l:refresh = 0
+				else
+					exe l:selwin . 'wincmd w | close' . l:bang
+				endif
+				let l:bang = ''
+
+			elseif l:key == 'd' " delete
+				if l:unlisted
+					call setbufvar(l:selbuf, '&buflisted', 1)
+				else
+					exe 'bdelete'.l:bang l:selbuf
+				endif
+				let l:bang = ''
+
+			elseif l:key == 'q' " quit
+				break
+
+			elseif l:key == 'g' || l:key == "\r"
+				if l:selwin == -1
+					exe 'buffer'.l:bang l:selbuf
+				else
+					exe l:selwin . 'wincmd w'
+				endif
+				if l:key == "\r" | break | endif
+				let l:bang = ''
+
+			else
+				let l:bang = ''
+				let l:refresh = 0
+
+			endif
+		catch
+			echohl ErrorMsg | echo "\rVIM" matchstr(v:exception, '^Vim(\a*):\zs.*') | echohl None
+			call inputsave()
+			call getchar()
+			call inputrestore()
+		endtry
+
+		" wrap around
+		let l:cursel += len(l:buffers)
+		let l:cursel  = l:cursel % len(l:buffers)
+	endwhile | finally
+		" TEAR DOWN ==========================================================
+
+		let &cmdheight = l:cmdheight
+		let &lazyredraw = l:lazyredraw
+		exe printf('hi Cursor guibg=%s guifg=%s', l:cursorbg, l:cursorfg ? l:cursorfg : 'NONE')
+		echo
+	endtry
 endfunc
 
-function s:setcmdh(height)
-	if a:height > &lines - winnr('$') * (&winminheight+1) - 1
-		call s:uninit()
-		echo "\r"|echoerr "QBuf E1: No room to display buffer list"
-	else
-		let &cmdheight = a:height
-	endif
-endfunc
-
-function s:switchbuf(bno, mod)
-	if bufwinnr(a:bno) == -1
-		exe "b".a:mod a:bno
-	else
-		exe bufwinnr(a:bno) . "winc w"
-	endif
-endfunc
-
-function s:qbufdcmd(bno, mod)
-	if s:unlisted
-		call setbufvar(a:bno, "&buflisted", 1)
-	else
-		exe "bd" . a:mod a:bno
-	endif
-endfunc
-
-function s:closewindow(bno, mod)
-	if bufwinnr(a:bno) != -1
-		exe bufwinnr(a:bno) . "winc w|close" . a:mod
-	endif
-endfunc
+command QBuf call s:run()

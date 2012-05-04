@@ -1,1 +1,1 @@
-let g:qb_hotkey = '<F12>'
+nnoremap <F12> :QBuf<CR>
