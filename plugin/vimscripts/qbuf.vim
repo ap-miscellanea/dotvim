@@ -15,9 +15,22 @@ function s:run()
 
 	let l:cmdheight = &cmdheight
 
+	let l:toggle  = ''
 	let l:bang    = ''
 	let l:cursel  = -1
 	let l:refresh =  1
+
+	" figure out what key the user has mapped this to
+	if hasmapto(':QBuf<CR>', 'n')
+		redir => l:nmap
+		silent nmap
+		redir END
+		let l:mappings = split(l:nmap, "\n")
+		let l:line     = l:mappings[match(l:mappings, ':QBuf\>')]
+		let l:key      = matchstr(l:line[3:], '[^ ]\+')
+		let l:toggle   = eval('"'.escape(l:key, '"<').'"')
+		unlet l:nmap
+	endif
 
 	try | while 1
 		" SCAN ===============================================================
@@ -130,6 +143,7 @@ function s:run()
 		if     l:key == "\<Up>"   | let l:key = 'k'
 		elseif l:key == "\<Down>" | let l:key = 'j'
 		elseif l:key == "\<Esc>"  | let l:key = 'q'
+		elseif l:key == l:toggle  | let l:key = 'q'
 		end
 
 		let l:selbuf = l:buffers[l:cursel]['num']
