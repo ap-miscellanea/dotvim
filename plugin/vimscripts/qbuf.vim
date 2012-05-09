@@ -142,6 +142,8 @@ function s:run()
 
 		if     l:key == "\<Up>"   | let l:key = 'k'
 		elseif l:key == "\<Down>" | let l:key = 'j'
+		elseif l:key == "\<C-P>"  | let l:key = 'k'
+		elseif l:key == "\<C-N>"  | let l:key = 'j'
 		elseif l:key == "\<Esc>"  | let l:key = 'q'
 		elseif l:key == l:toggle  | let l:key = 'q'
 		end
