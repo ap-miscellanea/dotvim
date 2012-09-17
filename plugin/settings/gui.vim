@@ -39,9 +39,6 @@ if 'klangraum' == hostname
 	set columns=113 lines=68
 elseif 'heliopause' == hostname
 	set columns=110 lines=60
-elseif 'apastron' == hostname
-	let colorscheme = 'lucius'
-	set columns=110 lines=35
 else
 	set columns=110 lines=35
 endif
