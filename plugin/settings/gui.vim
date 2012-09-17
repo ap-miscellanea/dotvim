@@ -12,15 +12,21 @@ set guioptions+=c         " use cmdline prompt instead of dialog windows for con
 set guicursor+=a:blinkon0 " turn off cursor blinking
 set guitablabel=%N\ %t    " simpler tab labels than default
 
-if has( 'gui_win32' )
+if has( 'gui_gtk' )
+	try   | set guifont=DejaVu\ Sans\ Mono\ 9
+	catch | set guifont=Bitstream\ Vera\ Sans\ Mono\ 9
+	endtry
+elseif has( 'gui_mac' )
+	try   | set guifont=Andale_Mono:h11
+	catch | set guifont=Menlo:h11
+	endtry
+elseif has( 'gui_win32' )
 	nnoremap <M-Space> :simalt ~<CR>
 	inoremap <M-Space> <C-o>:simalt ~<CR>
 
 	try   | set guifont=Consolas:h8:cANSI
 	catch | set guifont=Andale_Mono:h8:cANSI
 	endtry
-elseif has( 'gui_mac' )
-	set guifont=Menlo:h13
 endif
 
 let colorscheme = 'desert'
@@ -31,7 +37,6 @@ if 'klangraum' == hostname
 	let colorscheme = 'lucius'
 	" XXX also see .pekwm/autoproperties
 	set columns=113 lines=68
-	set guifont=DejaVu\ Sans\ Mono\ 9
 elseif 'heliopause' == hostname
 	set columns=110 lines=60
 elseif 'apastron' == hostname
