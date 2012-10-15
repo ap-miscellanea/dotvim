@@ -87,7 +87,7 @@ if exists( '&filetype' )
 	" NB: this needs to be done here and this way so regular text files
 	" (which have no file type) will have the default wrapping enabled
 	autocmd FileType * setlocal nowrap | setlocal list
-	autocmd FileType {mail,mkd,xml,xhtml,html} setlocal wrap | setlocal nolist
+	autocmd FileType {text,mail,mkd,xml,xhtml,html} setlocal wrap | setlocal nolist
 endif
 
 
