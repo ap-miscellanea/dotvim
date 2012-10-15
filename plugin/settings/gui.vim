@@ -17,7 +17,7 @@ if has( 'gui_gtk' )
 	catch | set guifont=Bitstream\ Vera\ Sans\ Mono\ 9
 	endtry
 elseif has( 'gui_macvim' )
-	try | set guifont=Source_Code_Pro:h11 | catch
+	try | set guifont=Source_Code_Pro:h13 | catch
 	try | set guifont=Andale_Mono:h11     | catch
 	try | set guifont=Menlo:h11           | catch
 	endtry | endtry | endtry
