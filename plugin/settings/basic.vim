@@ -111,6 +111,9 @@ nnoremap ZD :bd<CR>
 " better granularity for undoing insert mode work
 inoremap <C-W>   <C-G>u<C-W>
 
+" get spelling suggestions in a completion menu, easily
+nnoremap <Leader>s a<C-X><C-S>
+
 " fast window switching
 nnoremap <C-J> <C-W>j
 nnoremap <C-K> <C-W>k
