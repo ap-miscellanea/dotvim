@@ -13,6 +13,7 @@ if ! has( 'perl' ) | finish | endif
 
 " wheee!
 
+perl eval 'use lib "$ENV{HOME}/.vim/lib";'
 perl eval 'use Encode;'
 perl eval 'use HTML::Entities;'
 perl eval 'use Text::Markdown qw(markdown);'
