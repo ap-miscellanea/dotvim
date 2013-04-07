@@ -18,6 +18,7 @@ if has( 'gui_gtk' )
 	endtry
 elseif has( 'gui_macvim' )
 	" defaults write org.vim.MacVim MMNativeFullScreen 0
+	set guioptions-=lLrR " turn off any and all scrollbars
 	try | set guifont=Source_Code_Pro:h13 | catch
 	try | set guifont=Andale_Mono:h11     | catch
 	try | set guifont=Menlo:h11           | catch
