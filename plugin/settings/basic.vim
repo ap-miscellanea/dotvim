@@ -105,7 +105,7 @@ nnoremap ZS :w<CR>
 nnoremap ZX :qa<CR>
 
 " I do this a lot
-nnoremap ZD :bd<CR>
+nnoremap ZD :bp<Bar>bd #<CR>
 
 " automatically break undo cycle at certain keys --
 " better granularity for undoing insert mode work
