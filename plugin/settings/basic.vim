@@ -115,8 +115,10 @@ inoremap <C-W>   <C-G>u<C-W>
 nnoremap <Leader>s a<C-X><C-S>
 
 " fast window switching
+nnoremap <C-H> <C-W>h
 nnoremap <C-J> <C-W>j
 nnoremap <C-K> <C-W>k
+nnoremap <C-L> <C-W>l
 " fast buffer switching
 nnoremap <C-N> :bnext<CR>
 nnoremap <C-P> :bprev<CR>
