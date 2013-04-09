@@ -130,3 +130,6 @@ onoremap <M-LeftMouse> <C-C><4-LeftMouse>
 noremap  <M-LeftDrag>  <LeftDrag>
 inoremap <M-LeftDrag>  <LeftDrag>
 onoremap <M-LeftDrag>  <C-C><LeftDrag>
+
+" press Ctrl-R twice to insert the value of the VimL expr currently yanked
+inoremap <C-R><C-R> <C-R>=eval(substitute(@","\n$",'',''))<C-M>
