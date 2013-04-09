@@ -104,8 +104,8 @@ nnoremap <silent> <Esc><Esc> :nohlsearch<CR>
 nnoremap ZS :w<CR>
 nnoremap ZX :qa<CR>
 
-" I do this a lot
-nnoremap ZD :bp<Bar>bd #<CR>
+" I delete buffers a lot
+nnoremap <expr> ZD index(['help','quickfix'],&buftype) != -1 ? ":bd\<CR>" : ":bp\<Bar>bd #\<CR>"
 
 " automatically break undo cycle at certain keys --
 " better granularity for undoing insert mode work
