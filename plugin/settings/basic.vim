@@ -105,7 +105,7 @@ nnoremap ZS :w<CR>
 nnoremap ZX :qa<CR>
 
 " I delete buffers a lot
-nnoremap <expr> ZD index(['help','quickfix'],&buftype) != -1 ? ":bd\<CR>" : ":bp\<Bar>bd #\<CR>"
+nnoremap <expr> ZD index(['help','quickfix'],&buftype) != -1 ? ":bdelete\<CR>" : ":bprev \<Bar> bdelete #\<CR>"
 
 " automatically break undo cycle at certain keys --
 " better granularity for undoing insert mode work
