@@ -127,12 +127,7 @@ function! s:KeepSwitching(cmd)
 	return
 endfunction
 
-" fast window switching
-nnoremap <C-H> <C-W>h
-nnoremap <C-J> <C-W>j
-nnoremap <C-K> <C-W>k
-nnoremap <C-L> <C-W>l
-" fast buffer switching
+" quick buffer switching
 nnoremap <C-N> :call<Space><SID>KeepSwitching('bnext')<CR>
 nnoremap <C-P> :call<Space><SID>KeepSwitching('bprev')<CR>
 
