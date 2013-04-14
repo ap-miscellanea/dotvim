@@ -99,10 +99,8 @@ endif
 " Esc for quickly clearing the search highlight
 nnoremap <silent> <Esc><Esc> :nohlsearch<CR>
 
-" missing ZZ and ZQ counterparts:
-" quick save-buffer and quit-everything
+" missing ZZ counterpart
 nnoremap ZS :w<CR>
-nnoremap ZX :qa<CR>
 
 " I delete buffers a lot
 nnoremap <expr> ZD index(['help','quickfix'],&buftype) != -1 ? ":bdelete\<CR>" : ":bprev \<Bar> silent bdelete #\<CR>"
