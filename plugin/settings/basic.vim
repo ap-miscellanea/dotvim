@@ -94,35 +94,12 @@ endif
 " Esc for quickly clearing the search highlight
 nnoremap <silent> <Esc><Esc> :nohlsearch<CR>
 
-" missing ZZ counterpart
-nnoremap ZS :w<CR>
-
-" I delete buffers a lot
-nnoremap <expr> ZD index(['help','quickfix'],&buftype) != -1 ? ":bdelete\<CR>" : ":bprev \<Bar> silent bdelete #\<CR>"
-
 " automatically break undo cycle at certain keys --
 " better granularity for undoing insert mode work
 inoremap <C-W>   <C-G>u<C-W>
 
 " get spelling suggestions in a completion menu, easily
 nnoremap <Leader>s a<C-X><C-S>
-
-function! s:KeepSwitching(cmd)
-	exe a:cmd
-	if winnr('$') < 2 | return | endif
-	let curwin = winnr()
-	let origbuf = winbufnr(curwin)
-	let windows = range(1,winnr('$'))
-	while len(filter(windows, 'winbufnr(v:val) == winbufnr(curwin)')) > 1
-		exe a:cmd
-		if winbufnr(curwin) == origbuf | break | endif
-	endwhile
-	return
-endfunction
-
-" quick buffer switching
-nnoremap <C-N> :call<Space><SID>KeepSwitching('bnext')<CR>
-nnoremap <C-P> :call<Space><SID>KeepSwitching('bprev')<CR>
 
 " Alt-LeftMouse for visual block selections
 noremap  <M-LeftMouse> <4-LeftMouse>
