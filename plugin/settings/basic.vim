@@ -1,11 +1,6 @@
 set nocompatible
 scriptencoding utf-8
 
-if has( 'menu' )
-	" sets up bookmarks menu if none yet
-	exe 'amenu Book&marks.&Settings :e' expand( '<sfile>' ) . '<CR>'
-endif
-
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
