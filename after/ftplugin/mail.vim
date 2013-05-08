@@ -1,6 +1,7 @@
 setlocal expandtab
 setlocal textwidth=72
 setlocal fencs=utf-8
+setlocal spell
 
 if search('^$') | exe 'norm j0' | endif
 

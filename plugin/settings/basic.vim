@@ -22,6 +22,7 @@ endif
 set backspace=2       " allow backspacing over indent,eol,start
 set nojoinspaces      " don't treat [.?!] specially when joining lines.
 set nostartofline     " don't jump to start of line on paging motions
+set spelllang=el,de,en_gb
 set autowrite         " auto-save prior to :! :make and others
 set hidden            " keep current buffer around when :edit'ing another file
 set noswapfile        " don't litter
@@ -100,6 +101,10 @@ inoremap <C-W>   <C-G>u<C-W>
 
 " get spelling suggestions in a completion menu, easily
 nnoremap <Leader>s a<C-X><C-S>
+
+" toggle greek keymap
+nnoremap <Leader><Leader>      :let &keymap = len(&keymap) ? '' : 'greek_utf-8'<CR>
+inoremap <Leader><Leader> <C-O>:let &keymap = len(&keymap) ? '' : 'greek_utf-8'<CR>
 
 " Alt-LeftMouse for visual block selections
 noremap  <M-LeftMouse> <4-LeftMouse>
