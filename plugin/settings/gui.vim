@@ -38,9 +38,9 @@ if 'klangraum' == hostname
 	" XXX also see .pekwm/autoproperties
 	set columns=113 lines=68
 elseif 'heliopause' == hostname
-	set columns=110 lines=60
+	set columns=113 lines=42
 else
-	set columns=110 lines=35
+	set columns=113 lines=35
 endif
 
 "colorscheme desert
