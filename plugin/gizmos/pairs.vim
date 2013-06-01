@@ -19,11 +19,6 @@ function! SkipDelim(pair)
 	endif
 endfunc
 
-function! WithinEmptyPair()
-	let cur = strpart( getline('.'), col('.')-2, 2 )
-	return IsEmptyPair( cur )
-endfunc
-
 function! SpacePair()
 	let sep = ' '
 	let cur = strpart( getline('.'), col('.')-3, 3 )
@@ -34,6 +29,15 @@ function! SpacePair()
 	endif
 endfunc
 
+function! BackSpacePair()
+	let ln = getline('.')
+	let pos = col('.')
+	return
+	\ pos >= 3 && pos <= strlen(ln) && IsEmptyPair( ln[pos-3] . ln[pos]   ) ? "\<Del>" :
+	\ pos >= 2 &&                      IsEmptyPair( ln[pos-2] . ln[pos-1] ) ? "\<Del>\<BS>" :
+	\ "\<BS>"
+endfunc
+
 inoremap <expr> ) SkipDelim('()')
 inoremap <expr> ] SkipDelim('[]')
 inoremap <expr> } SkipDelim('{}')
@@ -41,9 +45,8 @@ inoremap <expr> ' SkipDelim("''")
 inoremap <expr> " SkipDelim('""')
 inoremap <expr> ` SkipDelim('``')
 
- inoremap <expr> <BS>    WithinEmptyPair() ? "\<Right>\<BS>\<BS>"      : "\<BS>"
-"inoremap <expr> <CR>    WithinEmptyPair() ? "\<CR>\<CR>\<Up>"         : "\<CR>"
-inoremap <expr> <Space> SpacePair()
+inoremap <expr> <Space>  SpacePair()
+inoremap <expr> <BS> BackSpacePair()
 
 vnoremap q( s(<C-R>")<Esc>
 vnoremap q) s(<C-R>")<Esc>
