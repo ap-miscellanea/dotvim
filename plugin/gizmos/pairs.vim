@@ -24,12 +24,13 @@ function! WithinEmptyPair()
 	return IsEmptyPair( cur )
 endfunc
 
-function! SpacePair(sep)
+function! SpacePair()
+	let sep = ' '
 	let cur = strpart( getline('.'), col('.')-3, 3 )
-	if IsEmptyPair( cur[0] . cur[2] ) && cur[1] == a:sep
-		return a:sep . "\<Left>"
+	if IsEmptyPair( cur[0] . cur[2] ) && cur[1] == sep
+		return sep . "\<Left>"
 	else
-		return a:sep
+		return sep
 	endif
 endfunc
 
@@ -42,7 +43,7 @@ inoremap <expr> ` SkipDelim('``')
 
  inoremap <expr> <BS>    WithinEmptyPair() ? "\<Right>\<BS>\<BS>"      : "\<BS>"
 "inoremap <expr> <CR>    WithinEmptyPair() ? "\<CR>\<CR>\<Up>"         : "\<CR>"
-inoremap <expr> <Space> SpacePair(' ')
+inoremap <expr> <Space> SpacePair()
 
 vnoremap q( s(<C-R>")<Esc>
 vnoremap q) s(<C-R>")<Esc>
