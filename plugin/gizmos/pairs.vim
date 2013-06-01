@@ -16,6 +16,12 @@ function! SkipDelim(pair)
 	return rgt . motion
 endfunc
 
+function! EnterPair()
+	let cur = strpart( getline('.'), col('.')-2, 2 )
+	let motion = IsEmptyPair( cur ) ? "\<C-O>O" : ""
+	return "\<CR>" . motion
+endfunc
+
 function! SpacePair()
 	let sep = ' '
 	let cur = strpart( getline('.'), col('.')-3, 3 )
@@ -39,6 +45,7 @@ inoremap <expr> ' SkipDelim("''")
 inoremap <expr> " SkipDelim('""')
 inoremap <expr> ` SkipDelim('``')
 
+inoremap <expr> <CR>     EnterPair()
 inoremap <expr> <Space>  SpacePair()
 inoremap <expr> <BS> BackSpacePair()
 
