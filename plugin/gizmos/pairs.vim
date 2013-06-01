@@ -12,21 +12,15 @@ function! SkipDelim(pair)
 	let lft = a:pair[0]
 	let rgt = a:pair[1]
 	let prev = strpart( getline('.'), col('.')-2, 1 )[0]
-	if IsEmptyPair( prev . rgt ) && prev != "\\"
-		return rgt . "\<Left>"
-	else
-		return rgt
-	endif
+	let motion = IsEmptyPair( prev . rgt ) && prev != "\\" ? "\<Left>" : ""
+	return rgt . motion
 endfunc
 
 function! SpacePair()
 	let sep = ' '
 	let cur = strpart( getline('.'), col('.')-3, 3 )
-	if IsEmptyPair( cur[0] . cur[2] ) && cur[1] == sep
-		return sep . "\<Left>"
-	else
-		return sep
-	endif
+	let motion = IsEmptyPair( cur[0] . cur[2] ) && cur[1] == sep ? "\<Left>" : ""
+	return sep . motion
 endfunc
 
 function! BackSpacePair()
