@@ -16,6 +16,7 @@ if ! has( 'perl' ) | finish | endif
 perl eval 'use lib "$ENV{HOME}/.vim/lib";'
 perl eval 'use Encode;'
 perl eval 'use HTML::Entities;'
+perl eval 'use URI::Escape;'
 perl eval 'use Text::Markdown qw(markdown);'
 perl eval 'use Text::SmartyPants; *smarten = \&Text::SmartyPants::process;'
 perl << EOF
