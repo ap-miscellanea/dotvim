@@ -116,3 +116,6 @@ onoremap <M-LeftDrag>  <C-C><LeftDrag>
 
 " press Ctrl-R twice to insert the value of the VimL expr currently yanked
 inoremap <C-R><C-R> <C-R>=eval(substitute(@","\n$",'',''))<C-M>
+
+" fill in closing tags automatically
+autocmd FileType * if strlen(&indentexpr) | exe 'inoremap <buffer> </ </<C-X><C-O>' | endif
