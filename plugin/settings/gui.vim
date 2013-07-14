@@ -20,9 +20,9 @@ elseif has( 'gui_macvim' )
 	nnoremap <D-CR> :set invfullscreen<CR>
 	" defaults write org.vim.MacVim MMNativeFullScreen 0
 	let &guioptions = substitute(&guioptions, '[lLrR]', '', 'g') " turn off any and all scrollbars
-	try | set guifont=Source_Code_Pro:h13 | catch
-	try | set guifont=Andale_Mono:h11     | catch
-	try | set guifont=Menlo:h11           | catch
+	try | set guifont=Source_Code_Pro_Light:h13 | catch
+	try | set guifont=Andale_Mono:h11           | catch
+	try | set guifont=Menlo:h11                 | catch
 	endtry | endtry | endtry
 elseif has( 'gui_win32' )
 	nnoremap <M-Space> :simalt ~<CR>
