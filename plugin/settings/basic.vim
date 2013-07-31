@@ -119,3 +119,7 @@ inoremap <C-R><C-R> <C-R>=eval(substitute(@","\n$",'',''))<C-M>
 
 " fill in closing tags automatically
 autocmd FileType * if strlen(&indentexpr) | exe 'inoremap <buffer> </ </<C-X><C-O>' | endif
+
+" when switching buffers, preserve window view
+autocmd BufWinLeave * if !&diff | let b:winview = winsaveview() | endif
+autocmd BufWinEnter * if exists('b:winview') && !&diff | call winrestview(b:winview) | endif
