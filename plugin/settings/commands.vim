@@ -1,8 +1,16 @@
-command! GreekPants silent! %s!\%u201C!«!g | silent! %s!<<!«!g | silent! %s!>>!»!g | silent! %s!\%u201D!»!g | silent! %s! - !\=' ' . nr2char(8211) . ' '!g | silent! %s!?!\=nr2char(894)!gc
-
 command! FindMarker /\([<=>|]\)\1\{6}/
 
 command! -range TidyHTML <line1>,<line2>!tidy -q -utf8 -config ~/.tidy.conf.unintrusive
+
+function s:GreekPants()
+	silent! %s!\%u201C!«!g
+	silent! %s!<<!«!g
+	silent! %s!>>!»!g
+	silent! %s!\%u201D!»!g
+	silent! %s! - !\=' ' . nr2char(8211) . ' '!g
+	silent! %s!?!\=nr2char(894)!gc
+endfunction
+command! GreekPants call s:GreekPants()
 
 if exists( ':filetype' )
 	command! -nargs=+ Man delcommand Man | runtime ftplugin/man.vim | Man <args>
