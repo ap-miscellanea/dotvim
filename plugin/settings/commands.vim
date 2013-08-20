@@ -21,27 +21,29 @@ if ! has( 'perl' ) | finish | endif
 
 " wheee!
 
-perl eval 'use lib "$ENV{HOME}/.vim/lib";'
 perl eval 'use HTML::Entities;'
 perl eval 'use URI::Escape;'
+perl eval 'use lib "$ENV{HOME}/.vim/lib";'
 perl eval 'use Text::Markdown qw(markdown);'
 perl eval 'use Text::SmartyPants; sub smarten { s/&#(\d+);/chr $1/eg, return $_ for Text::SmartyPants::process( shift, 2 ) }'
 perl << EOF
 use Encode;
-sub VIM::Filter {
-	my ( $start, $end, $func ) = @_;
-	my $encoding = VIM::Eval( '&fileencoding' ) || VIM::Eval( '&encoding' );
-	my $text = join '', map "$_\n", map { decode $encoding, $_ } $curbuf->Get( $start .. $end );
-	my @filtered = $func->( $text );
-	chomp @filtered;
-	$curbuf->Delete( $start + 1, $end ) if $end > $start;
-	$curbuf->Append( $start, map { split m!$/!, $_, -1 } @filtered );
-	$curbuf->Delete( $start );
+use List::Util 'reduce';
+sub get_decoded {
+	my $encoding = VIM::Eval( 'strlen(&fileencoding) ? &fileencoding : &encoding' );
+	decode $encoding, join "\n", $curbuf->Get( @_ );
+}
+sub filter {
+	my ( $start, $end, @func ) = @_;
+	my $filtered = reduce { join '', $b->( $a ) } get_decoded( $start .. $end ), @func;
+	$filtered =~ s/\n\z//;
+	$curbuf->Append( $end, split /\n/, $filtered, -1 );
+	$curbuf->Delete( $start, $end );
 }
 EOF
 
-command! -range Markdown       perl VIM::Filter( <line1>, <line2>, sub { smarten markdown shift } )
-command! -range SmartyPants    perl VIM::Filter( <line1>, <line2>, sub { smarten          shift } )
+command! -range Markdown       perl filter( <line1>, <line2>, \&markdown, \&smarten )
+command! -range SmartyPants    perl filter( <line1>, <line2>, \&smarten )
 command! MailPants 0/^$/ , /^-- /-1 SmartyPants
-command! -range DecodeHTML     perl VIM::Filter( <line1>, <line2>, \&HTML::Entities::decode )
-command! -range DecodeHTMLSafe perl my @special = qw( amp gt lt quot apos ); local @HTML::Entities::entity2char{ @special } = map "&$_;", @special; VIM::Filter( <line1>, <line2>, \&HTML::Entities::decode )
+command! -range DecodeHTML     perl filter( <line1>, <line2>, \&HTML::Entities::decode )
+command! -range DecodeHTMLSafe perl my @special = qw( amp gt lt quot apos ); local @HTML::Entities::entity2char{ @special } = map "&$_;", @special; filter( <line1>, <line2>, \&HTML::Entities::decode )
