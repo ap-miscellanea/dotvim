@@ -21,12 +21,8 @@ if ! has( 'perl' ) | finish | endif
 
 " wheee!
 
-perl eval 'use HTML::Entities;'
-perl eval 'use URI::Escape;'
-perl eval 'use lib "$ENV{HOME}/.vim/lib";'
-perl eval 'use Text::Markdown qw(markdown);'
-perl eval 'use Text::SmartyPants; sub smarten { s/&#(\d+);/chr $1/eg, return $_ for Text::SmartyPants::process( shift, 2 ) }'
 perl << EOF
+use lib "$ENV{HOME}/.vim/lib";
 use Encode;
 use List::Util 'reduce';
 sub get_decoded {
@@ -42,8 +38,15 @@ sub filter {
 }
 EOF
 
-command! -range Markdown       perl filter( <line1>, <line2>, \&markdown, \&smarten )
-command! -range SmartyPants    perl filter( <line1>, <line2>, \&smarten )
+perl eval 'use Text::SmartyPants; sub smarten { s/&#(\d+);/chr $1/eg, return $_ for Text::SmartyPants::process( shift, 2 ) }'
+command! -range SmartyPants perl filter( <line1>, <line2>, \&smarten )
 command! MailPants 0/^$/ , /^-- /-1 SmartyPants
+
+perl eval 'use Text::Markdown qw(markdown);'
+command! -range Markdown perl filter( <line1>, <line2>, \&markdown, \&smarten )
+
+perl eval 'use HTML::Entities;'
 command! -range DecodeHTML     perl filter( <line1>, <line2>, \&HTML::Entities::decode )
 command! -range DecodeHTMLSafe perl my @special = qw( amp gt lt quot apos ); local @HTML::Entities::entity2char{ @special } = map "&$_;", @special; filter( <line1>, <line2>, \&HTML::Entities::decode )
+
+perl eval 'use URI::Escape;'
