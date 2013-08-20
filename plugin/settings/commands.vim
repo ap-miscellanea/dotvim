@@ -12,6 +12,14 @@ function s:GreekPants()
 endfunction
 command! GreekPants call s:GreekPants()
 
+function s:ClearUndo()
+	let saved = [&undolevels, &modified]
+	set undolevels=-1
+	exe "normal i \<BS>\<Esc>"
+	let [&undolevels, &modified] = saved
+endfunction
+command! ClearUndo call s:ClearUndo()
+
 if exists( ':filetype' )
 	command! -nargs=+ Man delcommand Man | runtime ftplugin/man.vim | Man <args>
 endif
