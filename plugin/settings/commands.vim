@@ -25,7 +25,7 @@ perl eval 'use lib "$ENV{HOME}/.vim/lib";'
 perl eval 'use HTML::Entities;'
 perl eval 'use URI::Escape;'
 perl eval 'use Text::Markdown qw(markdown);'
-perl eval 'use Text::SmartyPants; *smarten = \&Text::SmartyPants::process;'
+perl eval 'use Text::SmartyPants; sub smarten { s/&#(\d+);/chr $1/eg, return $_ for Text::SmartyPants::process( shift, 2 ) }'
 perl << EOF
 use Encode;
 sub VIM::Filter {
@@ -40,8 +40,8 @@ sub VIM::Filter {
 }
 EOF
 
-command! -range Markdown       perl VIM::Filter( <line1>, <line2>, sub { my $_ = smarten( markdown( shift ), 2 ); s/&#(\d+);/chr $1/eg; return $_ } )
-command! -range SmartyPants    perl VIM::Filter( <line1>, <line2>, sub { my $_ = smarten( shift, 2 ); s/&#(\d+);/chr $1/eg; return $_ } )
+command! -range Markdown       perl VIM::Filter( <line1>, <line2>, sub { smarten markdown shift } )
+command! -range SmartyPants    perl VIM::Filter( <line1>, <line2>, sub { smarten          shift } )
 command! MailPants 0/^$/ , /^-- /-1 SmartyPants
 command! -range DecodeHTML     perl VIM::Filter( <line1>, <line2>, \&HTML::Entities::decode )
 command! -range DecodeHTMLSafe perl my @special = qw( amp gt lt quot apos ); local @HTML::Entities::entity2char{ @special } = map "&$_;", @special; VIM::Filter( <line1>, <line2>, \&HTML::Entities::decode )
