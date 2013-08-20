@@ -22,22 +22,22 @@ if ! has( 'perl' ) | finish | endif
 " wheee!
 
 perl eval 'use lib "$ENV{HOME}/.vim/lib";'
-perl eval 'use Encode;'
 perl eval 'use HTML::Entities;'
 perl eval 'use URI::Escape;'
 perl eval 'use Text::Markdown qw(markdown);'
 perl eval 'use Text::SmartyPants; *smarten = \&Text::SmartyPants::process;'
 perl << EOF
-	sub VIM::Filter {
-		my ( $start, $end, $func ) = @_;
-		my $encoding = VIM::Eval( '&fileencoding' ) || VIM::Eval( '&encoding' );
-		my $text = join '', map "$_\n", map { decode $encoding, $_ } $curbuf->Get( $start .. $end );
-		my @filtered = $func->( $text );
-		chomp @filtered;
-		$curbuf->Delete( $start + 1, $end ) if $end > $start;
-		$curbuf->Append( $start, map { split m!$/!, $_, -1 } @filtered );
-		$curbuf->Delete( $start );
-	}
+use Encode;
+sub VIM::Filter {
+	my ( $start, $end, $func ) = @_;
+	my $encoding = VIM::Eval( '&fileencoding' ) || VIM::Eval( '&encoding' );
+	my $text = join '', map "$_\n", map { decode $encoding, $_ } $curbuf->Get( $start .. $end );
+	my @filtered = $func->( $text );
+	chomp @filtered;
+	$curbuf->Delete( $start + 1, $end ) if $end > $start;
+	$curbuf->Append( $start, map { split m!$/!, $_, -1 } @filtered );
+	$curbuf->Delete( $start );
+}
 EOF
 
 command! -range Markdown       perl VIM::Filter( <line1>, <line2>, sub { my $_ = smarten( markdown( shift ), 2 ); s/&#(\d+);/chr $1/eg; return $_ } )
