@@ -102,9 +102,13 @@ inoremap <C-W>   <C-G>u<C-W>
 " get spelling suggestions in a completion menu, easily
 nnoremap <Leader>s a<C-X><C-S>
 
-" toggle greek keymap
-nnoremap <Leader><Leader>      :let &keymap = len(&keymap) ? '' : 'greek_utf-8'<CR>
-inoremap <Leader><Leader> <C-O>:let &keymap = len(&keymap) ? '' : 'greek_utf-8'<CR>
+function s:toggle_greek_keymap()
+	let &keymap = len(&keymap) ? '' : 'greek_utf-8'
+	return ''
+endfunction
+" option-/ on Mac US layout
+nnoremap <expr> ÷ <SID>toggle_greek_keymap()
+inoremap <expr> ÷ <SID>toggle_greek_keymap()
 
 " Alt-LeftMouse for visual block selections
 noremap  <M-LeftMouse> <4-LeftMouse>
