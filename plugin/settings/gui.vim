@@ -6,6 +6,7 @@ endif
 
 set t_vb= " shut up -- for the 4th time
 
+set mousehide
 set guioptions-=t         " no tear-off menu items
 set guioptions-=T         " no toolbar
 set guioptions+=c         " use cmdline prompt instead of dialog windows for confirmation
