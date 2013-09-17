@@ -1,3 +1,5 @@
+command! R enew | setlocal buftype=nofile bufhidden=hide noswapfile
+
 command! FindMarker /\([<=>|]\)\1\{6}/
 
 command! -range TidyHTML <line1>,<line2>!tidy -q -utf8 -config ~/.tidy.conf.unintrusive
