@@ -26,7 +26,8 @@ function BufTabLabel(bufnum)
 endfunction
 
 function! BufTabLine()
-	let listed_buffers = filter(range(1,bufnr('$')),'buflisted(v:val)')
+	" help buffers are always unlisted, but quickfix windows are not
+	let listed_buffers = filter(range(1,bufnr('$')),'buflisted(v:val) && "quickfix" !=? getbufvar(v:val, "&buftype")')
 	return '%0T'.join(map(listed_buffers,'BufTabLabel(v:val)'), '') . '%#TabLineFill#'
 endfunction
 
