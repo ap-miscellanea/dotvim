@@ -12,8 +12,8 @@ function! s:KeepSwitching(cmd)
 endfunction
 
 " quick buffer switching
-nnoremap <C-N> :call<Space><SID>KeepSwitching('bnext')<CR>
-nnoremap <C-P> :call<Space><SID>KeepSwitching('bprev')<CR>
+nnoremap <C-N> :call<Space><SID>KeepSwitching('bnext')<CR><C-G>
+nnoremap <C-P> :call<Space><SID>KeepSwitching('bprev')<CR><C-G>
 
 " I delete buffers a lot
 nnoremap <expr> ZD index(['help','quickfix'],&buftype,0,1) != -1 ? ":bwipeout\<CR>" : ":bprev \<Bar> bwipeout #\<CR>"
