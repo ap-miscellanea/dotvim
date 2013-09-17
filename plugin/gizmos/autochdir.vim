@@ -3,6 +3,7 @@
 
 function! ChangeToDirFromBuffer()
 	if bufname( '' ) =~ '://' | return | endif
+	if &buftype ==? 'help' | return | endif
 	lcd %:p:h
 	if ! has( "win32" )
 		let git_dir = substitute( system( 'git rev-parse --show-toplevel' ), '\n.*', '', '' )
