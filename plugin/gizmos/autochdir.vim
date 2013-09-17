@@ -13,4 +13,4 @@ endfunction
 
 autocmd BufEnter * call ChangeToDirFromBuffer()
 
-nnoremap <Leader>e :e <C-R>=expand('%:h')<CR>/
+nnoremap <Leader>e :e <C-R>=substitute(expand('%:h').'/','^\.\?/$','','')<CR>
