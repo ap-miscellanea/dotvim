@@ -16,7 +16,7 @@ nnoremap <C-N> :call<Space><SID>KeepSwitching('bnext')<CR>
 nnoremap <C-P> :call<Space><SID>KeepSwitching('bprev')<CR>
 
 " I delete buffers a lot
-nnoremap <expr> ZD index(['help','quickfix'],&buftype) != -1 ? ":bdelete\<CR>" : ":bprev \<Bar> bdelete #\<CR>"
+nnoremap <expr> ZD index(['help','quickfix'],&buftype,0,1) != -1 ? ":bdelete\<CR>" : ":bprev \<Bar> bdelete #\<CR>"
 
 " missing ZZ counterpart
 nnoremap ZS :w<CR>
