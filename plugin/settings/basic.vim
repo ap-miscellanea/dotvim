@@ -95,6 +95,10 @@ endif
 " Esc for quickly clearing the search highlight
 nnoremap <silent> <Esc><Esc> :nohlsearch<CR>
 
+" why do I care about top/bottom of screen?
+nnoremap H ^
+nnoremap L $
+
 " automatically break undo cycle at certain keys --
 " better granularity for undoing insert mode work
 inoremap <C-W>   <C-G>u<C-W>
