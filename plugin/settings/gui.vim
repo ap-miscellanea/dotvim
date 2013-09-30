@@ -34,16 +34,6 @@ elseif has( 'gui_win32' )
 	endtry
 endif
 
-let hostname = tolower(split(hostname(),'\.')[0])
-if 'klangraum' == hostname
-	" XXX also see .pekwm/autoproperties
-	set columns=113 lines=68
-elseif 'heliopause' == hostname
-	set columns=113 lines=42
-else
-	set columns=113 lines=35
-endif
-
 "colorscheme desert
 "colorscheme slate " XXX: slate is now moria, give that a spin
 colorscheme lucius
