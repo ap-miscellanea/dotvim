@@ -31,7 +31,8 @@ set nowritebackup     " really, don't litter
 set confirm           " ask interactively instead of requiring a ! on commands
 set history=2000      " 100x the default
 set undolevels=5000   " 5x the default
-set shortmess+=mrI    " supress intro message, shorten flags [Modified] and [readonly]
+set shortmess+=Is     " supress intro message and search wrap-around message
+set shortmess+=mr     " shorten flags [Modified] and [readonly]
 set shortmess-=tT     " don't truncate file messages
 set viminfo='10000,<50,s10000,h
 
