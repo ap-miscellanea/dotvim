@@ -10,7 +10,8 @@ autocmd!
 function! BufTabName(name)
 	"return fnamemodify(a:name, ':.')
 	"return substitute(fnamemodify(a:name, ':.'),'.*/\ze[^/]\+/[^/]\+$','','')
-	return substitute(fnamemodify(a:name, ':.'),'[^/]\zs[^/]\+\ze/','','g')
+	"return substitute(fnamemodify(a:name, ':.'),'[^/]\zs[^/]\+\ze/','','g')
+	return substitute(substitute(fnamemodify(a:name, ':.'),'[^/]\zs[^/]\+\ze/[^/]\+/','','g'),'\(/\|^\)\@<![aieou]\ze.*/','','g')
 endfunction
 
 function BufTabLabel(bufnum)
