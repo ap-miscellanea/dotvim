@@ -51,6 +51,10 @@ if exists( ':filetype' )
 	filetype plugin indent on
 endif
 
+" when switching buffers, preserve window view
+autocmd BufWinLeave * if !&diff | let b:winview = winsaveview() | endif
+autocmd BufWinEnter * if exists('b:winview') && !&diff | call winrestview(b:winview) | endif
+
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -131,7 +135,3 @@ function! BeforeCursor(char)
 	return a:char == getline('.')[col('.')-2]
 endfunction
 autocmd FileType * if strlen(&indentexpr) | exe 'inoremap <buffer> <expr> / BeforeCursor("<") ? "/\<C-X>\<C-O>" : "/"' | endif
-
-" when switching buffers, preserve window view
-autocmd BufWinLeave * if !&diff | let b:winview = winsaveview() | endif
-autocmd BufWinEnter * if exists('b:winview') && !&diff | call winrestview(b:winview) | endif
