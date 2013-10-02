@@ -91,6 +91,8 @@ if exists( '&filetype' )
 	autocmd FileType {text,mail,mkd,xml,xhtml,html} setlocal wrap | setlocal nolist
 endif
 
+" set up bookmarks menu
+if has( 'menu' ) | exe 'amenu Book&marks.&Settings :e' expand( '<sfile>' ) . '<CR>' | endif
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
