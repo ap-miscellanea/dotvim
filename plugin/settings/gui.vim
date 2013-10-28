@@ -25,6 +25,13 @@ elseif has( 'gui_macvim' )
 	try | set guifont=Andale_Mono:h11           | catch
 	try | set guifont=Menlo:h11                 | catch
 	endtry | endtry | endtry
+
+	function! GetMacDesktopResolution()
+		let script = 'tell application "Finder" to get bounds of window of desktop'
+		let cmd = printf('osascript -e %s', shellescape(script))
+		let [x0,y0,x1,y1] = split(system(cmd), '[^0-9]\+')
+		return [x1-x0, y1-y0]
+	endfunction
 elseif has( 'gui_win32' )
 	nnoremap <M-Space> :simalt ~<CR>
 	inoremap <M-Space> <C-o>:simalt ~<CR>
