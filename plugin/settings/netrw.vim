@@ -7,3 +7,5 @@ else
 	" some silly servers refuse to respond to user agents that they assume to be spiders
 	let g:netrw_http_cmd  = printf("wget -U 'Vim %d.%d (netrw)' -O", v:version / 100, v:version % 100)
 endif
+
+let g:netrw_liststyle = 3 " default to tree view
