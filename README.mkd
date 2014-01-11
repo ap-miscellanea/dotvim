@@ -1,7 +1,7 @@
 This is the content of my `~/.vim` directory. What do you do not see
-here is my `~/.vimrc`, because there isn’t one. All my settings are in
-`plugin/settings`, some extra gizmos are in `plugin/gizmos`, and some
-filetype-specific settings are in `after/ftplugin`.
+here is my `~/.vimrc`, because there isn’t one. It’s spread across
+files inside `plugin` directory, with some filetype-specific settings
+in `after/ftplugin` and some extra gizmos in `bundle/gizmos`.
 
 (Actually, I do have a `~/.vimrc`, but it is short and not versioned.
 I keep keep non-public or very machine-specific configuration there.)
