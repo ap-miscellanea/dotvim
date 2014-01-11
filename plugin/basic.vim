@@ -42,7 +42,7 @@ set backupskip+=/var/spool/cron/*
 set formatoptions+=l1
 "set formatoptions+=n formatlistpat="^\s*\(\d\+[\]:.)}\t ]\|[*-]\)\s*" " recognize numbered and bulleted lists when formatting
 
-if exists( "&encoding" )
+if exists( '&encoding' )
 	set encoding=utf-8                      " use UTF-8 internally
 	set fileencodings=ucs-bom,utf-8,cp1252  " assume files are UTF-8; if that fails, use Latin1
 endif
