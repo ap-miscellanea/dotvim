@@ -3,8 +3,6 @@
 " Last Change:  2014-01-11
 " Licence:      No Warranties. WTFPL. But please tell me!
 " Version:      0.9
-"
-" KNOWN PROBLEMS: compatibility with `cursorline` -- https://github.com/ap/vim-css-color/issues/24
 
 if v:version < 700
 	echoerr printf('Vim 7 is required for css-color (this is only %d.%d)',v:version/100,v:version%100)
@@ -111,7 +109,7 @@ if ! has('gui_running')
 	let s:xvquant[s:cubergb[5]] = 5
 
 	" selects the nearest xterm color for a rgb value like #FF0000
-	function! s:XTermColorForRGB(color)
+	function! s:rgb2xterm(color)
 		let best_match=0
 		let smallest_distance = 10000000000
 		let color = tolower(a:color)
@@ -149,64 +147,74 @@ function! s:fg_for_bg(color)
 	return r*30 + g*59 + b*11 > 12000 ? s:black : s:white
 endfunction
 
+let s:pattern_color  = {}
 let s:color_prefix   = has('gui_running') ? 'gui' : 'cterm'
-let s:syn_color_calc = has('gui_running') ? '"#" . toupper(rgb_color)' : 's:XTermColorForRGB(rgb_color)'
-function! s:create_syn_match(color, pattern)
+let s:syn_color_calc = has('gui_running') ? '"#" . rgb_color' : 's:rgb2xterm(rgb_color)'
+function! s:create_syn_match()
 
-	if strlen(a:color) == 6
-		let rgb_color = a:color
-	elseif strlen(a:color) == 3
-		let rgb_color = substitute(a:color, '\(.\)', '\1\1', 'g')
+	let pattern = submatch(0)
+
+	if has_key( b:has_color_syn_match, pattern ) | return | endif
+	let b:has_color_syn_match[pattern] = 1
+
+	if has_key( s:pattern_color, pattern )
+		let rgb_color = s:pattern_color[pattern]
 	else
-		return
+		let funcname = submatch(1)
+		let hexcolor = submatch(5)
+
+		if funcname == 'rgb'
+			let rgb_color = s:rgb2color(submatch(2),submatch(3),submatch(4))
+		elseif funcname == 'hsl'
+			let rgb_color = s:hsl2color(submatch(2),submatch(3),submatch(4))
+		elseif strlen(hexcolor) == 6
+			let rgb_color = tolower(hexcolor)
+		elseif strlen(hexcolor) == 3
+			let rgb_color = substitute(tolower(hexcolor), '\(.\)', '\1\1', 'g')
+		else
+			throw 'css_color: create_syn_match invoked on bad match data'
+		endif
+
+		let s:pattern_color[pattern] = rgb_color
 	endif
 
-	if has_key( b:color_pattern, a:pattern ) | return | endif
-	let b:color_pattern[a:pattern] = 1
-
-	let pattern = a:pattern
 	" iff pattern ends on word character, require word break to match
 	if pattern =~ '\>$' | let pattern .= '\>' | endif
 
-	let group = 'cssColor' . tolower(rgb_color)
+	let group = 'cssColor' . rgb_color
 	exe 'syn match' group '/'.escape(pattern, '/').'/ contained containedin=@cssColorableGroup'
 	exe 'let syn_color =' s:syn_color_calc
 	exe 'hi' group s:color_prefix.'bg='.syn_color s:color_prefix.'fg='.s:fg_for_bg(rgb_color)
 	return ''
 endfunction
 
-let s:_funcname   = '\(rgb\|hsl\)a\?'
-let s:_numval     = '\(\d\{1,3}%\?\)'
+let s:_funcname   = '\(rgb\|hsl\)a\?' " submatch 1
+let s:_numval     = '\(\d\{1,3}%\?\)' " submatch 2,3,4
 let s:_ws_        = '\s*'
 let s:_listsep    = s:_ws_ . ',' . s:_ws_
 let s:_otherargs_ = '\%(,[^)]*\)\?'
 let s:_funcexpr   = s:_funcname . '[(]' . s:_numval . s:_listsep . s:_numval . s:_listsep . s:_numval . s:_ws_ . s:_otherargs_ . '[)]'
-let s:_hexcolor   = '#\(\x\{3}\|\x\{6}\)\>'
-let s:_grammar    = s:_funcexpr . '\|' . s:_hexcolor
+let s:_hexcolor   = '#\(\x\{3}\|\x\{6}\)\>' " submatch 5
+let s:_grammar    = '\ze' . s:_funcexpr . '\|' . s:_hexcolor
 function! css_color#parse_screen()
 	" N.B. this substitute() call is here just for the side effect
 	"      of invoking s:create_syn_match during substitution -- because
 	"      match() and friends do not allow finding all matches in a single
 	"      scan without examining the start of the string over and over
-	call substitute( join( getline('w0','w$'), "\n" ), s:_grammar,
-		\   '\=s:create_syn_match(('
-		\ . '  submatch(1) == "rgb" ? s:rgb2color(submatch(2),submatch(3),submatch(4)) :'
-		\ . '  submatch(1) == "hsl" ? s:hsl2color(submatch(2),submatch(3),submatch(4)) :'
-		\ . '  submatch(5)'
-		\ . '), submatch(0))', 'g' )
+	call substitute( join( getline('w0','w$'), "\n" ), s:_grammar, '\=s:create_syn_match()', 'g' )
 
 	let lnr = line('.')
 	let group = ''
 	let groupstart = 0
 	let endcol = col('$')
-	call filter(b:color_matches, 'matchdelete(v:val)')
+	call filter(b:color_match_id, 'matchdelete(v:val)')
 	for col in range( 1, endcol )
 		let nextgroup = col < endcol ? synIDattr( synID( lnr, col, 1 ), 'name' ) : ''
 		if group == nextgroup | continue | endif
 		if group =~ '^cssColor\x\{6}$'
 			let regex = '\%'.lnr.'l\%'.groupstart.'c'.repeat( '.', col - groupstart )
 			let match = matchadd( group, regex, -1 )
-			let b:color_matches += [ match ]
+			let b:color_match_id += [ match ]
 		endif
 		let group = nextgroup
 		let groupstart = col
