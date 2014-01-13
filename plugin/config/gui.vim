@@ -13,6 +13,14 @@ set guioptions+=c         " use cmdline prompt instead of dialog windows for con
 set guicursor+=a:blinkon0 " turn off cursor blinking
 set guitablabel=%N\ %t    " simpler tab labels than default
 
+" Alt-LeftMouse for visual block selections
+noremap  <M-LeftMouse> <4-LeftMouse>
+inoremap <M-LeftMouse> <4-LeftMouse>
+onoremap <M-LeftMouse> <C-C><4-LeftMouse>
+noremap  <M-LeftDrag>  <LeftDrag>
+inoremap <M-LeftDrag>  <LeftDrag>
+onoremap <M-LeftDrag>  <C-C><LeftDrag>
+
 if has( 'gui_gtk' )
 	try   | set guifont=DejaVu\ Sans\ Mono\ 9
 	catch | set guifont=Bitstream\ Vera\ Sans\ Mono\ 9

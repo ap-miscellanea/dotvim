@@ -113,14 +113,6 @@ endfunction
 nnoremap <expr> ÷ <SID>toggle_greek_keymap()
 inoremap <expr> ÷ <SID>toggle_greek_keymap()
 
-" Alt-LeftMouse for visual block selections
-noremap  <M-LeftMouse> <4-LeftMouse>
-inoremap <M-LeftMouse> <4-LeftMouse>
-onoremap <M-LeftMouse> <C-C><4-LeftMouse>
-noremap  <M-LeftDrag>  <LeftDrag>
-inoremap <M-LeftDrag>  <LeftDrag>
-onoremap <M-LeftDrag>  <C-C><LeftDrag>
-
 " press Ctrl-R twice to insert the value of the VimL expr currently yanked
 inoremap <C-R><C-R> <C-R>=eval(substitute(@","\n$",'',''))<C-M>
 
