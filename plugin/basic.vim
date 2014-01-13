@@ -55,10 +55,12 @@ endif
 autocmd BufWinLeave * if !&diff | let b:winview = winsaveview() | endif
 autocmd BufWinEnter * if exists('b:winview') && !&diff | call winrestview(b:winview) | endif
 
-" some legwork for more serious use of encrypted files
-set cryptmethod=blowfish
-" FIXME smart security, but needs to deal with restoring the settings
-"autocmd BufReadPost * if strlen(&l:key) | set noswapfile nowritebackup viminfo= nobackup noshelltemp history=0 | endif
+if v:version >= 703
+	" some legwork for more serious use of encrypted files
+	set cryptmethod=blowfish
+	" FIXME smart security, but needs to deal with restoring the settings
+	"autocmd BufReadPost * if strlen(&l:key) | set noswapfile nowritebackup viminfo= nobackup noshelltemp history=0 | endif
+endif
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
