@@ -1,7 +1,12 @@
 This is the content of my `~/.vim` directory. What do you do not see
 here is my `~/.vimrc`, because there isn’t one. It’s spread across
-files inside `plugin` directory, with some filetype-specific settings
-in `after/ftplugin` and some extra gizmos in `bundle/gizmos`.
+various files organized into directories like so:
+
+- `plugin/config` for core Vim editor configuration
+- `plugin/pluginprefs` for tweaking plugins
+- `after/ftplugin` for any filetype-specific configuration
+- `bundle/gizmos` for some extra small scripts
+- `bundle/mine` for larger scripts I intend to be stand-alone eventually
 
 (Actually, I do have a `~/.vimrc`, but it is short and not versioned.
 I keep keep non-public or very machine-specific configuration there.)
