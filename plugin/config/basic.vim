@@ -94,6 +94,11 @@ if has( 'menu' ) | exe 'amenu Book&marks.&Settings :e' expand( '<sfile>' ) . '<C
 " Esc for quickly clearing the search highlight
 nnoremap <silent> <Esc><Esc> :nohlsearch<CR>
 
+" I never want to use Ex mode. Map this to something useful?
+" But baking it into muscle memory would be counterproductive
+" whenever I need to use a stock Vim
+nnoremap Q <Nop>
+
 " why do I care about top/bottom of screen?
 nnoremap H ^
 nnoremap L $
