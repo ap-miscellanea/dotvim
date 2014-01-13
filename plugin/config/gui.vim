@@ -1,8 +1,7 @@
+if ! has( 'gui_running' ) | finish | endif
+
 " this must run after the GUI is already up
 autocmd GUIEnter * source <sfile>
-if ! has( 'gui_running' )
-	finish
-endif
 
 set t_vb= " shut up -- for the 4th time
 

@@ -1,6 +1,4 @@
-if ! has( 'wildmenu' )
-	finish
-endif
+if ! has( 'wildmenu' ) | finish | endif
 
 set wildmenu
 set wildmode=longest:full,list:full

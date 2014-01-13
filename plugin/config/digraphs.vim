@@ -1,6 +1,4 @@
-if ! has( 'digraphs' )
-	finish
-endif
+if ! has( 'digraphs' ) | finish | endif
 
 " make good typography easy to type
 digraphs  160 " non-breaking space
