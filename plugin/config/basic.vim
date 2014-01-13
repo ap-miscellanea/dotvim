@@ -47,10 +47,6 @@ if exists( '&encoding' )
 	set fileencodings=ucs-bom,utf-8,cp1252  " assume files are UTF-8; if that fails, use Latin1
 endif
 
-if exists( ':filetype' )
-	filetype plugin indent on
-endif
-
 " when switching buffers, preserve window view
 autocmd BufWinLeave * if !&diff | let b:winview = winsaveview() | endif
 autocmd BufWinEnter * if exists('b:winview') && !&diff | call winrestview(b:winview) | endif
@@ -67,7 +63,6 @@ endif
 " basic display setup
 "
 
-syntax enable
 set incsearch           " incremental search is convenient
 set hlsearch            " ... and search highlighting helpful
 set ruler               " show cursor Y,X in status line
@@ -87,15 +82,6 @@ set lazyredraw          " speed up macros
 set noerrorbells        " shut up
 set visualbell          " shut up
 set t_vb=               " no really, shut up
-
-if exists( '&filetype' )
-	" disable wrapping in most any particular format
-	" but enable it in email, Markdown, XML and X?HTML
-	" NB: this needs to be done here and this way so regular text files
-	" (which have no file type) will have the default wrapping enabled
-	autocmd FileType * setlocal nowrap | setlocal list
-	autocmd FileType {text,mail,mkd,xml,xhtml,html} setlocal wrap | setlocal nolist
-endif
 
 " set up bookmarks menu
 if has( 'menu' ) | exe 'amenu Book&marks.&Settings :e' expand( '<sfile>' ) . '<CR>' | endif
