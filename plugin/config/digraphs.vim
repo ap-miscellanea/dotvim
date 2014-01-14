@@ -16,3 +16,5 @@ digraphs ..  8230 " horizontal ellipsis
 digraphs <3  9829 " black heart suit
 digraphs ?!  8253 " interrobang
 digraphs !?  8253 " interrobang
+digraphs :(  9785 " white frowning face
+digraphs :)  9786 " white smiling face
