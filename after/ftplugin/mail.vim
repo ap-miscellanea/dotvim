@@ -3,10 +3,10 @@ setlocal textwidth=72
 setlocal fencs=utf-8
 setlocal spell
 
-if search('^$') | exe 'norm j0' | endif
-
 " mail.vim links mailSubject to LineNR but that doesn't stand out enough
 hi link mailSubject PreProc
+
+autocmd BufEnter <buffer> if search('\n\n\zs') | exe "norm 999\<C-Y>" | endif
 
 " when saving mail, remove trailing whitespace from all lines except sig markers
 autocmd BufWritePre <buffer> let s:saveview = winsaveview() | silent! %s:\(^--\)\@<! \+$:: | call winrestview(s:saveview) | unlet s:saveview
