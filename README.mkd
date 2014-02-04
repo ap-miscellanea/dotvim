@@ -1,6 +1,6 @@
 This is the content of my `~/.vim` directory. What do you do not see
-here is my `~/.vimrc`, because there isn’t one. It’s spread across
-various files organized into directories like so:
+here is my `~/.vimrc`, because there almost isn’t one. Configuration
+is spread across various files organized into directories like so:
 
 - `plugin/config` for core Vim editor configuration
 - `plugin/pluginprefs` for tweaking plugins
@@ -8,5 +8,6 @@ various files organized into directories like so:
 - `bundle/gizmos` for some extra small scripts
 - `bundle/mine` for larger scripts I intend to be stand-alone eventually
 
-(Actually, I do have a `~/.vimrc`, but it is short and not versioned.
-I keep keep non-public or very machine-specific configuration there.)
+The `~/.vimrc` itself is short and not versioned. Its main content is the
+single line `call util#unbundle()`. Otherwise I only keep keep non-public
+or very machine-specific configuration there.

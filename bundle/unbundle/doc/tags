@@ -1,9 +1,0 @@
-:Unbundle	unbundle.txt	/*:Unbundle*
-:Unftbundle	unbundle.txt	/*:Unftbundle*
-Unbundle()	unbundle.txt	/*Unbundle()*
-Unftbundle()	unbundle.txt	/*Unftbundle()*
-bundles	unbundle.txt	/*bundles*
-ftbundles	unbundle.txt	/*ftbundles*
-unbundle-intro	unbundle.txt	/*unbundle-intro*
-unbundle-usage	unbundle.txt	/*unbundle-usage*
-unbundle.vim	unbundle.txt	/*unbundle.vim*
