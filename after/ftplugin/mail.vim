@@ -8,11 +8,40 @@ hi link mailSubject PreProc
 
 autocmd BufEnter <buffer> if search('\n\n\zs') | exe "norm 999\<C-Y>" | endif
 
-" before saving, remove trailing whitespace from all lines except sig markers
-autocmd BufWritePre <buffer> let s:saveview = winsaveview() | silent! %s:\(^--\)\@<! \+$:: | call winrestview(s:saveview) | unlet s:saveview
+function! s:fixup()
+	let saveview = winsaveview()
 
-" before saving, find the first signature in the buffer,
-" then find the name in full within it,
-" then use that to replace the 'A.' on the From: line
-autocmd BufWritePre <buffer> let s:saveview = winsaveview() | silent! 1,/^\n/s!^From:.*\zsA\.\ze Pagaltzis!\= filter( [ matchstr( matchstr( join( getline(1,'$'), "\r" ), '\v\r-- \r\zs([^\r]+(\r|$))*' ), '\v(Aristot(le|eles)|Αριστοτέλης)' ), 'A.' ], 'len(v:val) > 0' )[0] !e | call winrestview(s:saveview) | unlet s:saveview
-autocmd BufWritePre <buffer> let s:saveview = winsaveview() | silent! 1,/^\n/s!^From:.*\zsPagaltzis!\= filter( [ matchstr( matchstr( join( getline(1,'$'), "\r" ), '\v\r-- \r\zs([^\r]+(\r|$))*' ), 'Παγκαλτζής' ), 'Pagaltzis' ], 'len(v:val) > 0' )[0] !e | call winrestview(s:saveview) | unlet s:saveview
+	0norm 0 " start at start of file
+	let headerbreak = search( '^$', 'W' )
+
+	let sigbreak = search( '^-- $', 'W' )
+	if sigbreak
+		" abort if there are multiple sigs
+		if search( '^-- $', 'W' )
+			call winrestview(saveview)
+			try | echoerr 'Multiple signatures' | endtry
+		endif
+
+		let signature = join( getline( sigbreak + 1, '$' ), "\r" )
+
+		let firstname = matchstr( signature, '\v(Aristot(le|eles)|Αριστοτέλης)' )
+		if len(firstname)
+			1,/^$/s!^From:.*\zsA\.\ze Pagaltzis!\= firstname!e
+		endif
+
+		let surname = matchstr( signature, '\v(Pagaltzis|Παγκαλτζής)')
+		if len(surname)
+			1,/^$/s!^From:.*\zsPagaltzis!\= surname !e
+		endif
+	endif
+
+	" remove trailing whitespace from all lines in the body
+	exe (headerbreak + 1).','.(sigbreak ? sigbreak -1 : '$').'s/ \+$//e'
+
+	" delete trailing empty lines
+	$ | while search('^\s*$', 'cW') | delete | endwhile
+
+	call winrestview(saveview)
+endfunction
+
+autocmd BufWritePre <buffer> call s:fixup()
