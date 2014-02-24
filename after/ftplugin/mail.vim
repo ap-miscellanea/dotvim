@@ -22,16 +22,18 @@ function! s:fixup()
 			try | echoerr 'Multiple signatures' | endtry
 		endif
 
-		let signature = join( getline( sigbreak + 1, '$' ), "\r" )
+		" check if sig mentions any identity and set From: accordingly
+		if search( '^@@', 'cW' )
+			" abort if there are multiple identities
+			if search( '^@@', 'W' )
+				call winrestview(saveview)
+				try | echoerr 'Multiple identities' | endtry
+			endif
 
-		let firstname = matchstr( signature, '\v(Aristot(le|eles)|Αριστοτέλης)' )
-		if len(firstname)
-			1,/^$/s!^From:.*\zsA\.\ze Pagaltzis!\= firstname!e
-		endif
+			let identity = 'ident_' . matchstr( getline('.'), '^@@ *\zs[^ ]*' )
+			delete
 
-		let surname = matchstr( signature, '\v(Pagaltzis|Παγκαλτζής)')
-		if len(surname)
-			1,/^$/s!^From:.*\zsPagaltzis!\= surname !e
+			exe '1,'.(headerbreak - 1).'s/\c^From: \?\zs.*/\=identity/e'
 		endif
 	endif
 
@@ -40,6 +42,9 @@ function! s:fixup()
 
 	" delete trailing empty lines
 	$ | while search('^\s*$', 'cW') | delete | endwhile
+
+	" delete empty sig
+	if search('^-- $', 'cW') | delete | endif
 
 	" check if body mentions any attachments and add header to indicate so
 	" and take care to adjust cursor position to match afterwards
