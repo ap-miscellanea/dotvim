@@ -16,17 +16,16 @@ function! s:fixup()
 
 	let sigbreak = search( '^-- $', 'W' )
 	if sigbreak
-		" abort if there are multiple sigs
+		" drop additional sigs if there are multiple ones
 		if search( '^-- $', 'W' )
-			call winrestview(saveview)
-			try | echoerr 'Multiple signatures' | endtry
+			.,$ delete
+			exe sigbreak
 		endif
 
 		" check if sig mentions any identity and set From: accordingly
 		if search( '^@@', 'cW' )
 			" abort if there are multiple identities
-			if search( '^@@', 'W' )
-				call winrestview(saveview)
+			if search( '^@@', 'nW' )
 				try | echoerr 'Multiple identities' | endtry
 			endif
 
