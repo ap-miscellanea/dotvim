@@ -33,17 +33,19 @@ if ! has( 'perl' ) | finish | endif
 
 perl << EOF
 use lib "$ENV{HOME}/.vim/lib";
-use Encode;
-use List::Util 'reduce';
+use Encode ();
 sub get_decoded {
 	my $encoding = VIM::Eval( 'strlen(&fileencoding) ? &fileencoding : &encoding' );
-	decode $encoding, join "\n", $curbuf->Get( @_ );
+	Encode::decode $encoding, join "\n", $curbuf->Get( @_ );
 }
 sub filter {
 	my ( $start, $end, @func ) = @_;
-	my $filtered = reduce { join '', $b->( $a ) } get_decoded( $start .. $end ), @func;
-	$filtered =~ s/\n\z//;
-	$curbuf->Append( $end, split /\n/, $filtered, -1 );
+	my @line = do {
+		my $text = get_decoded( $start .. $end );
+		$text = join '', $_->( $text ) for @func;
+		split /\n/, $text, -1;
+	};
+	$curbuf->Append( $end, @line ? @line : '' );
 	$curbuf->Delete( $start, $end );
 }
 EOF
