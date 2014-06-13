@@ -15,7 +15,7 @@ set tabstop=4         " tabs displayed at 4 columns
 set softtabstop=4     " tab key shifts by 4 columns
 set shiftwidth=4      " indentation at 4 columns
 set nolist            " [will selectively set this later] ensure we don't mess up the tabbing
-set listchars=tab:›·,trail:•,nbsp:– " and make it look nice
+set listchars=tab:›·,trail:•,nbsp:— " and make it look nice
 if has( "&shiftround" )
 	set shiftround    " always in-/outdent to next tabstop
 endif
