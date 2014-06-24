@@ -1,5 +1,7 @@
 /doc/tags
 /bundle/*/doc/tags
 /bundle/*/README*
+/bundle/*/**/.gitignore
+/bundle/*/**/.gitattributes
 /spell
 /.netrwhist
