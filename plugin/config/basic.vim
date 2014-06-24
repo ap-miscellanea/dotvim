@@ -94,6 +94,11 @@ if has( 'menu' ) | exe 'amenu Book&marks.&Settings :e' expand( '<sfile>' ) . '<C
 " Esc for quickly clearing the search highlight
 nnoremap <silent> <Esc><Esc> :nohlsearch<CR>
 
+" make n/N always mean forward/backward search
+" regardless of whether it was done with / or ?
+nnoremap <silent> n /<CR>
+nnoremap <silent> N ?<CR>
+
 " I never want to use Ex mode. Map this to something useful?
 " But baking it into muscle memory would be counterproductive
 " whenever I need to use a stock Vim
