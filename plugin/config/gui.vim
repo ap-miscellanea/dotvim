@@ -51,5 +51,5 @@ elseif has( 'gui_win32' )
 endif
 
 "colorscheme desert
-"colorscheme slate " XXX: slate is now moria, give that a spin
+"colorscheme slate2 " XXX: slate2 is now moria, give that a spin
 colorscheme lucius
