@@ -84,7 +84,7 @@ set visualbell          " shut up
 set t_vb=               " no really, shut up
 
 " set up bookmarks menu
-if has( 'menu' ) | exe 'amenu Book&marks.&Settings :e' expand( '<sfile>' ) . '<CR>' | endif
+if has( 'menu' ) | exe 'anoremenu Book&marks.&Settings :e' expand( '<sfile>' ) . '<CR>' | endif
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
