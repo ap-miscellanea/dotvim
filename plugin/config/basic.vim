@@ -104,8 +104,20 @@ nnoremap <silent> <Esc><Esc> :nohlsearch<CR>
 
 " make n/N always mean forward/backward search
 " regardless of whether it was done with / or ?
-nnoremap <silent> n /<CR>
-nnoremap <silent> N ?<CR>
+nmap <silent> n /<CR>
+nmap <silent> N ?<CR>
+
+" always put search match in the center of the screen
+let g:centeronsearch = "zzzv"
+autocmd InsertEnter * let g:centeronsearch = "\<C-O>zz\<C-O>zv"
+autocmd InsertLeave * let g:centeronsearch = "zzzv"
+cnoremap <expr> <CR> "\<CR>" . ( getcmdtype() =~ "[/?]" ? g:centeronsearch : "" )
+function s:CenterOnOperatorPendingSearch(key)
+	let g:centeronsearch = "\<C-O>zz\<C-O>zv\<C-O>:let g:centeronsearch = 'zzzv'\<CR>"
+	return a:key
+endfunction
+omap <expr> / <SID>CenterOnOperatorPendingSearch("/")
+omap <expr> ? <SID>CenterOnOperatorPendingSearch("?")
 
 " I never want to use Ex mode. Map this to something useful?
 " But baking it into muscle memory would be counterproductive
