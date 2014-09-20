@@ -9,4 +9,4 @@ function! SudoWrite(file,line1,line2)
 	if a:line1 == 1 && a:line2 == line('$') | set nomodified | endif
 endfunction
 
-command! -range=% -nargs=? -complete=file Sudo call SudoWrite(<q-args>,<q-line1>,<q-line2>)
+command! -range=% -nargs=? -complete=file W call SudoWrite(<q-args>,<q-line1>,<q-line2>)
