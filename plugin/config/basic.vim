@@ -107,6 +107,9 @@ nnoremap <silent> <Esc><Esc> :nohlsearch<CR>
 nmap <silent> n /<CR>
 nmap <silent> N ?<CR>
 
+" don't jump immediately when using * (but do if it’s the same word again)
+nnoremap <silent> * :let [b:starjump, b:starnav] = [@/, winsaveview()]<CR>*:if @/ != b:starjump <Bar> call winrestview(b:starnav) <Bar> endif<CR>:unlet b:starjump b:starnav<CR>
+
 " always put search match in the center of the screen
 let g:centeronsearch = "zzzv"
 autocmd InsertEnter * let g:centeronsearch = "\<C-O>zz\<C-O>zv"
