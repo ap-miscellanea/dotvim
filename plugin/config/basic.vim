@@ -86,6 +86,9 @@ set t_vb=               " no really, shut up
 " set up bookmarks menu
 if has( 'menu' ) | exe 'anoremenu Book&marks.&Settings :e' expand( '<sfile>' ) . '<CR>' | endif
 
+" not needed there
+autocmd CmdwinEnter * set nonumber
+
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " mappings
