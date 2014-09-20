@@ -91,6 +91,11 @@ if has( 'menu' ) | exe 'anoremenu Book&marks.&Settings :e' expand( '<sfile>' ) .
 " mappings
 "
 
+"" this keeps coming up and seems attractive
+"" but getting used to it would make stock Vim incredibly annoying to use
+"nnoremap ; :
+"nnoremap : ;
+
 " Esc for quickly clearing the search highlight
 nnoremap <silent> <Esc><Esc> :nohlsearch<CR>
 
