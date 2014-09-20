@@ -117,11 +117,6 @@ nnoremap L $
 " better granularity for undoing insert mode work
 inoremap <C-W>   <C-G>u<C-W>
 
-" make cmdwin a little nicer to use
-autocmd CmdwinEnter * nnoremap <buffer> <C-c> <C-c><C-c>
-autocmd CmdwinEnter * inoremap <buffer> <C-c> <C-c><C-c>
-autocmd CmdwinEnter * set nonumber
-
 " get spelling suggestions in a completion menu, easily
 nnoremap <Leader>s a<C-X><C-S>
 
