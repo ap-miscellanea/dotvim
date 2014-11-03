@@ -1,11 +1,7 @@
 " experimental: easier typing and deleting of delimiter pairs
 function! IsEmptyPair(str)
-	for pair in split( &matchpairs, ',' ) + [ "''", '""', '``' ]
-		if a:str == join( split( pair, ':' ),'' )
-			return 1
-		endif
-	endfor
-	return 0
+	let pairs = map( split( &matchpairs, ',' ), 'substitute(v:val,":","","")' ) + [ "''", '""', '``' ]
+	return -1 != index( pairs, a:str )
 endfunc
 
 function! SkipDelim(pair)
@@ -23,10 +19,9 @@ function! EnterPair()
 endfunc
 
 function! SpacePair()
-	let sep = ' '
-	let cur = strpart( getline('.'), col('.')-3, 3 )
-	let motion = IsEmptyPair( cur[0] . cur[2] ) && cur[1] == sep ? "\<Left>" : ""
-	return sep . motion
+	let cur = strpart( getline('.'), col('.')-2, 2 )
+	let motion = IsEmptyPair( cur ) ? "\<Left>" : ""
+	return ' ' . motion
 endfunc
 
 function! BackSpacePair()
