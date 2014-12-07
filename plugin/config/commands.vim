@@ -22,6 +22,8 @@ function s:ClearUndo()
 endfunction
 command! ClearUndo call s:ClearUndo()
 
+command! SynDebug echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+
 if exists( ':filetype' )
 	command! -nargs=+ Man delcommand Man | runtime ftplugin/man.vim | Man <args>
 endif
