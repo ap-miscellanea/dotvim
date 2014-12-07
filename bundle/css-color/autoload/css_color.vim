@@ -1,8 +1,7 @@
 " Language:     Colorful CSS Color Preview
 " Author:       Aristotle Pagaltzis <pagaltzis@gmx.de>
-" Last Change:  2014-01-14
-" Licence:      No Warranties. WTFPL. But please tell me!
-" Version:      1.0
+" Commit:       $Format:%H$
+" Licence:      The MIT License (MIT)
 
 if v:version < 700
 	echoerr printf('Vim 7 is required for css-color (this is only %d.%d)',v:version/100,v:version%100)
@@ -207,7 +206,7 @@ function! s:create_syn_match()
 endfunction
 
 function! s:update_matches()
-	call filter(b:color_match_id, 'matchdelete(v:val)')
+	call filter(w:color_match_id, 'matchdelete(v:val)')
 	if &l:cursorline
 		" adds matches based that duplicate the highlighted colors on the current line
 		let lnr = line('.')
@@ -220,7 +219,7 @@ function! s:update_matches()
 			if group =~ '^BG\x\{6}$'
 				let regex = '\%'.lnr.'l\%'.groupstart.'c'.repeat( '.', col - groupstart )
 				let match = matchadd( group, regex, -1 )
-				let b:color_match_id += [ match ]
+				let w:color_match_id += [ match ]
 			endif
 			let group = nextgroup
 			let groupstart = col
@@ -256,11 +255,13 @@ function! css_color#init(type, groups)
 
 	let b:has_color_hi    = {}
 	let b:has_pattern_syn = {}
-	let b:color_match_id  = []
+	let w:color_match_id  = []
 
 	augroup CSSColor
 		autocmd! * <buffer>
 		exe 'autocmd CursorMoved,CursorMovedI <buffer> call s:parse_'.a:type.'_screen()'
+		autocmd BufWinEnter <buffer> call s:update_matches()
+		autocmd BufWinLeave <buffer> call filter(w:color_match_id, 'matchdelete(v:val)')
 	augroup END
 
 	do CSSColor CursorMoved <buffer>
