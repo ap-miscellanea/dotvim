@@ -19,9 +19,10 @@ function! EnterPair()
 endfunc
 
 function! SpacePair()
-	let cur = strpart( getline('.'), col('.')-2, 2 )
-	let motion = IsEmptyPair( cur ) ? "\<Left>" : ""
-	return ' ' . motion
+	let sep = ' '
+	let cur = strpart( getline('.'), col('.')-3, 3 )
+	let motion = IsEmptyPair( cur[0] . cur[2] ) && cur[1] == sep ? "\<Left>" : ""
+	return sep . motion
 endfunc
 
 function! BackSpacePair()
