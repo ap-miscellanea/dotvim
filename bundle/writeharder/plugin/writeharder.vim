@@ -1,6 +1,6 @@
 function! WriteHarder(line1,line2,file)
 	call system('sudo -l') | if v:shell_error | echohl ErrorMsg | echo 'Sorry, sudo is not playing ball' | echohl None | return | endif
-	augroup SudoWrite
+	augroup WriteHarderSilently
 		" intercept the external file change reload prompt event
 		autocmd FileChangedShell <buffer> :
 		" put it in an env var to avoid the need to shell-quote
