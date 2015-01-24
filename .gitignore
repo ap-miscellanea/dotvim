@@ -2,6 +2,7 @@
 
 /bundle/*/doc/tags
 /bundle/*/README*
+/bundle/*/LICENSE
 /bundle/*/**/.gitignore
 /bundle/*/**/.gitattributes
 
