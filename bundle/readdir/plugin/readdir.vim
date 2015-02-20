@@ -35,6 +35,10 @@ function s:set_bufname(name)
 	exe 'silent! bwipeout!' bufnr('#')
 endfunction
 
+function s:current_entry()
+	return b:readdir_content[ line('.') - 1 ]
+endfunction
+
 function readdir#Setup()
 	if ! exists('b:readdir_cwd')
 		let path = expand('<afile>')
@@ -50,6 +54,7 @@ function readdir#Setup()
 	endif
 
 	nnoremap <buffer> <silent> <CR> :call readdir#Open()<CR>
+	nnoremap <buffer> <silent> o    :call readdir#OpenNew()<CR>
 	nnoremap <buffer> <silent> a    :call readdir#CycleHidden()<CR>
 	setlocal undolevels=-1 buftype=nofile filetype=readdir
 
@@ -90,7 +95,7 @@ function readdir#Show()
 endfunction
 
 function readdir#Open()
-	let path = b:readdir_content[ line('.') - 1 ]
+	let path = s:current_entry()
 
 	if isdirectory(path)
 		let b:readdir_prev = b:readdir_cwd
@@ -99,9 +104,10 @@ function readdir#Open()
 	endif
 
 	unlet b:readdir_id b:readdir_cwd b:readdir_content
-	setlocal modifiable< undolevels< buftype< filetype<
+	setlocal modifiable< buftype< filetype<
 	mapclear <buffer>
 	call s:set_bufname(path) | go | edit
+	setlocal undolevels< " left late to avoid leaving the content change during :edit on undo stack
 
 	" :file sets the notedited flag but :edit does not clear it (see :help not-edited)
 	" HACK: intercept one write, then pretend to write the file, clearing the notedited flag
@@ -109,9 +115,13 @@ function readdir#Open()
 	write!
 endfunction
 
+function readdir#OpenNew()
+	edit `=s:current_entry()`
+endfunction
+
 function readdir#CycleHidden()
 	let g:readdir_hidden = ( g:readdir_hidden + 1 ) % 3
-	let b:readdir_prev = b:readdir_content[ line('.') - 1 ]
+	let b:readdir_prev = s:current_entry()
 	call readdir#Show()
 endfunction
 
