@@ -102,6 +102,9 @@ autocmd CmdwinEnter * set nonumber
 " Esc for quickly clearing the search highlight
 nnoremap <silent> <Esc><Esc> :nohlsearch<CR>
 
+" run external commands really easily
+nnoremap ! :!
+
 " make n/N always mean forward/backward search
 " regardless of whether it was done with / or ?
 nmap <silent> n /<CR>
