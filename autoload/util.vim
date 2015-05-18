@@ -14,9 +14,7 @@ endfunc
 
 function util#unbundle()
 	let seen = {}
-	for path in split( &runtimepath, ',' )
-		let seen[ path ] = 1
-	endfor
+	call map( split( &runtimepath, ',' ), 'extend( seen, { v:val : 1 } )' )
 
 	let bundlepath = join( filter( util#globpathlist( &runtimepath, 'bundle/*/.' ), '!has_key(seen, v:val)' ), ',' )
 	for path in util#globpathlist( bundlepath, 'doc/.' )
