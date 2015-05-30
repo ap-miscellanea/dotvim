@@ -1,4 +1,4 @@
-" Vim global plugin for very minimal directory browsing
+" Vim global plugin for providing templates for new files
 " Licence:     The MIT License (MIT)
 " Commit:      $Format:%H$
 " {{{ Copyright (c) 2015 Aristotle Pagaltzis <pagaltzis@gmx.de>
@@ -27,9 +27,22 @@ if v:version < 700
 	finish
 endif
 
-augroup ReadDir
-autocmd!
-autocmd BufEnter,BufNewFile * if isdirectory(expand('<afile>')) | call readdir#Setup() | endif
-augroup END
+function! templates#load()
+	let templates = split( globpath( &runtimepath, 'templates/' . &filetype ), "\n" )
+	if len( templates ) == 0 | return | endif
+	silent execute 1 'read' templates[0]
+	1 delete _
+	if search( 'cursor:', 'W' )
+		let cursorline = strpart( getline( '.' ), col( '.' ) - 1 )
+		let y = matchstr( cursorline, '^cursor:\s*\zs\d\+\ze' )
+		let x = matchstr( cursorline, '^cursor:\s*\d\+\s\+\zs\d\+\ze' )
+		let d = matchstr( cursorline, '^cursor:\s*\d\+\s\+\(\d\+\s\+\)\?\zsdel\>\ze' )
+		if ! strlen( x ) | let x = 0 | endif
+		if ! strlen( y ) | let y = 0 | endif
+		if d == 'del' | delete _ | endif
+		call cursor( y, x )
+	endif
+	set nomodified
+endfunction
 
 " vim:foldmethod=marker
