@@ -51,6 +51,14 @@ endif
 autocmd BufWinLeave * if !&diff | let b:winview = winsaveview() | endif
 autocmd BufWinEnter * if exists('b:winview') && !&diff | call winrestview(b:winview) | endif
 
+if has( 'wildmenu' )
+	set wildmenu
+	set wildmode=longest:full,list:full
+	set wildignore+=*.a,*.o
+	set wildignore+=*.bmp,*.gif,*.ico,*.jpg,*.png
+	set wildignore+=.git,.hg,.svn
+	set wildignore+=*~,*.swp,*.tmp
+endif
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
