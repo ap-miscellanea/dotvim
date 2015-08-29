@@ -88,6 +88,11 @@ autocmd CmdwinEnter * set nonumber
 " mappings
 "
 
+if has( 'digraphs' )
+	digraphs *.   183 " centered dot
+	digraphs <3  9829 " black heart suit
+endif
+
 "" this keeps coming up and seems attractive
 "" but getting used to it would make stock Vim incredibly annoying to use
 "nnoremap ; :
