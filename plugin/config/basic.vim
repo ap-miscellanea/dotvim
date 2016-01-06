@@ -60,10 +60,14 @@ if has( 'wildmenu' )
 	set wildignore+=*~,*.swp,*.tmp
 endif
 
+if exists( ':filetype' ) | filetype plugin indent on | endif
+
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " basic display setup
 "
+
+if has( 'syntax' ) | syntax enable | endif
 
 set incsearch           " incremental search is convenient
 set hlsearch            " ... and search highlighting helpful
