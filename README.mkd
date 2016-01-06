@@ -6,6 +6,7 @@ is spread across various files organized into directories like so:
 - `vimrc/pluginprefs` for tweaking plugins
 - `after/ftplugin` for any filetype-specific configuration
 
-The `~/.vimrc` itself is short and not versioned. Its main content is the
-single line `call util#unbundle()`. Otherwise I only keep keep non-public
-or very machine-specific configuration there.
+The `~/.vimrc` itself is short and not versioned. Its essential content is
+the single line `call util#unbundle()` – because `&runtimepath` needs to be
+set before Vim starts its scan for plugins during startup. Aside from that
+I only keep non-public or very machine-specific configuration in there.
