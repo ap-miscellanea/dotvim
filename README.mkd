@@ -2,8 +2,8 @@ This is the content of my `~/.vim` directory. What do you do not see
 here is my `~/.vimrc`, because there almost isn’t one. Configuration
 is spread across various files organized into directories like so:
 
-- `plugin/config` for core Vim editor configuration
-- `plugin/pluginprefs` for tweaking plugins
+- `vimrc` for core Vim editor configuration
+- `vimrc/pluginprefs` for tweaking plugins
 - `after/ftplugin` for any filetype-specific configuration
 
 The `~/.vimrc` itself is short and not versioned. Its main content is the
