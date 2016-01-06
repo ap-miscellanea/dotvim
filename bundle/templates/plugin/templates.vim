@@ -23,14 +23,39 @@
 " }}}
 
 if v:version < 700
-	echoerr printf('Vim 7 is required for readdir (this is only %d.%d)',v:version/100,v:version%100)
+	echoerr printf('Vim 7 is required for templates plugin (this is only %d.%d)',v:version/100,v:version%100)
 	finish
 endif
 
+let g:templates_empty_files = get(g:, 'templates_empty_files', 0)
+
 augroup Templates
 autocmd!
-autocmd FileType * if line2byte( line( '$' ) + 1 ) == -1 | call templates#load() | endif
+autocmd FileType * if s:isnewfile() | call s:loadtemplate( &filetype ) | endif
 augroup END
+
+function! s:loadtemplate( filetype )
+	let templates = split( globpath( &runtimepath, 'templates/' . a:filetype ), "\n" )
+	if len( templates ) == 0 | return | endif
+	silent execute 1 'read' templates[0]
+	1 delete _
+	if search( 'cursor:', 'W' )
+		let cursorline = strpart( getline( '.' ), col( '.' ) - 1 )
+		let y = matchstr( cursorline, '^cursor:\s*\zs\d\+\ze' )
+		let x = matchstr( cursorline, '^cursor:\s*\d\+\s\+\zs\d\+\ze' )
+		let d = matchstr( cursorline, '^cursor:\s*\d\+\s\+\(\d\+\s\+\)\?\zsdel\>\ze' )
+		if ! strlen( x ) | let x = 0 | endif
+		if ! strlen( y ) | let y = 0 | endif
+		if d == 'del' | delete _ | endif
+		call cursor( y, x )
+	endif
+	set nomodified
+endfunction
+
+function! s:isnewfile()
+	return ( has('byte_offset') ? line2byte(1) == -1 : getline(1,2) == [''] )
+		\ && ! &modified && ( g:templates_empty_files || ! filereadable(bufname('')) )
+endfunction
 
 command -nargs=1 New new | set ft=<args>
 
