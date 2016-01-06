@@ -5,6 +5,7 @@ autocmd GUIEnter * source <sfile>
 
 set t_vb= " shut up -- for the 4th time
 
+set columns=110 lines=42
 set mousehide
 set guioptions-=t         " no tear-off menu items
 set guioptions-=T         " no toolbar
@@ -32,15 +33,6 @@ elseif has( 'gui_macvim' )
 	try | set guifont=Andale_Mono:h11           | catch
 	try | set guifont=Menlo:h11                 | catch
 	endtry | endtry | endtry
-	function! s:set_macvim_window_size()
-		let v = mac#get_desktop_resolution()[1]
-		let [&columns, &lines] =
-			\ v ==  768 ? [113, 42] :
-			\ v == 1080 ? [124, 57] :
-			\ v == 1440 ? [136, 70] :
-			\             [110, 30]
-	endfunction
-	autocmd GUIEnter * call s:set_macvim_window_size()
 elseif has( 'gui_win32' )
 	nnoremap <M-Space> :simalt ~<CR>
 	inoremap <M-Space> <C-o>:simalt ~<CR>
