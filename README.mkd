@@ -5,8 +5,6 @@ is spread across various files organized into directories like so:
 - `plugin/config` for core Vim editor configuration
 - `plugin/pluginprefs` for tweaking plugins
 - `after/ftplugin` for any filetype-specific configuration
-- `bundle/gizmos` for some extra small scripts
-- `bundle/mine` for larger scripts I intend to be stand-alone eventually
 
 The `~/.vimrc` itself is short and not versioned. Its main content is the
 single line `call util#unbundle()`. Otherwise I only keep keep non-public
