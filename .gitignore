@@ -1,3 +1,5 @@
+/vimrc.d/00-local.vim
+
 /doc/tags
 
 /bundle/*/doc/tags
