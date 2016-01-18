@@ -27,7 +27,7 @@ function runtimepath#setup()
 	let &runtimepath = join( filter( rtp, '!empty(v:val)' ), ',' )
 endfunc
 
-" this can be called from vimrc after #setup to suppress the stock Vim plugins
+" this can be called at the very end of vimrc to suppress loading the stock Vim plugins
 function runtimepath#hidevimruntime()
 	let g:real_rtp = &runtimepath
 	let rt = escape( $VIMRUNTIME, '\' )
