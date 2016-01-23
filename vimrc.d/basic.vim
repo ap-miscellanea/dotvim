@@ -24,7 +24,7 @@ set nojoinspaces      " don't treat [.?!] specially when joining lines.
 set nostartofline     " don't jump to start of line on paging motions
 set spelllang=el,de,en_gb
 set autowrite         " auto-save prior to :! :make and others
-set hidden            " keep current buffer around when :edit'ing another file
+set hidden            " don't throw away changes when :edit'ing another file
 set noswapfile        " don't litter
 set nobackup          " don't litter
 set nowritebackup     " really, don't litter
