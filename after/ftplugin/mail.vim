@@ -48,7 +48,7 @@ function! s:fixup()
 	" check if body mentions any attachments and add header to indicate so
 	" and take care to adjust cursor position to match afterwards
 	let body = filter( getline( headerbreak + 1, sigbreak ? sigbreak -1 : '$' ), 'v:val !~ "^>"' )
-	if match( body, '\c\v<(anbei>|angehängt>|Anhang>|attach)' ) >= 0
+	if match( body, '\c\v<(anbei>|angehängt>|Anhang>|attach|enclose)' ) >= 0
 		let i = 1
 		while i < headerbreak
 			if getline(i) =~ '\c^X-Require-Multipart:'
