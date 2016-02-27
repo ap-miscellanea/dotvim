@@ -102,7 +102,12 @@ autocmd CmdwinEnter * set nonumber
 
 if has( 'digraphs' )
 	digraphs *.   183 " centered dot
+	digraphs **  8226 " bullet
+	digraphs ?!  8253 " interrobang
+	digraphs !?  8253 " interrobang
 	digraphs <3  9829 " black heart suit
+	digraphs :(  9785 " white frowning face
+	digraphs :)  9786 " white smiling face
 endif
 
 "" this keeps coming up and seems attractive
