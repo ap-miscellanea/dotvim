@@ -17,24 +17,16 @@ inoremap <M-LeftDrag>  <LeftDrag>
 onoremap <M-LeftDrag>  <C-C><LeftDrag>
 
 if has( 'gui_gtk' )
-	try   | set guifont=DejaVu\ Sans\ Mono\ 9
-	catch | set guifont=Bitstream\ Vera\ Sans\ Mono\ 9
-	endtry
+	set guifont=DejaVu\ Sans\ Mono\ 9,Bitstream\ Vera\ Sans\ Mono\ 9
 elseif has( 'gui_macvim' )
+	set guifont=Source_Code_Pro_Light:h13,Andale_Mono:h11,Menlo:h11
 	nnoremap <D-CR> :set invfullscreen<CR>
 	" defaults write org.vim.MacVim MMNativeFullScreen 0
 	let &guioptions = substitute(&guioptions, '[lLrR]', '', 'g') " turn off any and all scrollbars
-	try | set guifont=Source_Code_Pro_Light:h13 | catch
-	try | set guifont=Andale_Mono:h11           | catch
-	try | set guifont=Menlo:h11                 | catch
-	endtry | endtry | endtry
 elseif has( 'gui_win32' )
+	set guifont=Consolas:h8:cANSI,Andale_Mono:h8:cANSI
 	nnoremap <M-Space> :simalt ~<CR>
 	inoremap <M-Space> <C-o>:simalt ~<CR>
-
-	try   | set guifont=Consolas:h8:cANSI
-	catch | set guifont=Andale_Mono:h8:cANSI
-	endtry
 endif
 
 "colorscheme desert
