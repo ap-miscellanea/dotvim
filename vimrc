@@ -1,6 +1,7 @@
 set nocompatible
 scriptencoding utf-8
 
+" see also: plugin/commands.vim plugin/mappings.vim
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -120,12 +121,8 @@ autocmd CmdwinEnter * set nonumber
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" plugin loading setup
+" plugin loading setup (must be done before Vim starts its scan for plugins)
 "
 
-" set up &runtimepath to load the bundles
-" this must be done before Vim starts its scan for plugins
-call runtimepath#setup()
-
-" suppress loading of the stock Vim plugins
-call stockless#auto()
+call runtimepath#setup() " add plugin bundles to &runtimepath
+call stockless#auto() " suppress the stock Vim plugins
