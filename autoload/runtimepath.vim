@@ -26,21 +26,3 @@ function runtimepath#setup()
 	call extend( rtp, [ bundleafter ] )
 	let &runtimepath = join( filter( rtp, '!empty(v:val)' ), ',' )
 endfunc
-
-" this can be called at the very end of vimrc to suppress loading the stock Vim plugins
-function runtimepath#hidevimruntime()
-	let g:real_rtp = &runtimepath
-	let rt = escape( $VIMRUNTIME, '\' )
-	let &rtp = substitute( &rtp, '\v(^|,)\V'.rt.'\v(,|$)', '\=(submatch(1).submatch(2))[0]', 'g' )
-	" if Vim goes to source anything else whatsoever, fix &runtimepath first
-	augroup UnhideVimRuntime
-	autocmd SourcePre * call runtimepath#unhidevimruntime()
-	augroup END
-endfunc
-
-function runtimepath#unhidevimruntime()
-	let &runtimepath = g:real_rtp
-	unlet g:real_rtp
-	autocmd! UnhideVimRuntime
-	augroup! UnhideVimRuntime
-endfunc

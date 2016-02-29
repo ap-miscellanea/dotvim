@@ -9,4 +9,4 @@ runtime! vimrc.d/*.vim
 runtime! vimrc.d/pluginprefs/*.vim
 
 " suppress loading of the stock Vim plugins
-call runtimepath#hidevimruntime()
+call stockless#auto()
