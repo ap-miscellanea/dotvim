@@ -78,6 +78,8 @@ endif
 
 if has( 'syntax' ) | syntax enable | endif
 
+if exists( ':colorscheme' ) && ! has( 'gui_running' ) | colorscheme railscasts | endif
+
 set incsearch           " incremental search is convenient
 set hlsearch            " ... and search highlighting helpful
 set ruler               " show cursor Y,X in status line
@@ -91,6 +93,7 @@ if has( "&sidescrolloff" )
 endif
 set winminheight=0      " don't try to keep windows visible
 set laststatus=2        " always show status line
+set title               " show filename in window title
 set mouse=a             " be mouse-aware, in all modes
 set nomousehide         " hidden pointer = disorienting
 set lazyredraw          " speed up macros
