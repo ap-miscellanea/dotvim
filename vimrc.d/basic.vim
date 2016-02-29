@@ -88,6 +88,7 @@ endif
 
 if has( 'syntax' ) | syntax enable | endif
 
+let colors_name='' " define it to keep stock gvimrc from loading a colorscheme
 if exists( ':colorscheme' ) && ! has( 'gui_running' ) | colorscheme railscasts | endif
 
 set incsearch           " incremental search is convenient

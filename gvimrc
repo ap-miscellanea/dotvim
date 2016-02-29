@@ -1,8 +1,3 @@
-if ! has( 'gui_running' ) | finish | endif
-
-" this must run after the GUI is already up
-autocmd GUIEnter * source <sfile>
-
 set t_vb= " shut up -- for the 4th time
 
 set columns=110 lines=42
