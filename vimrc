@@ -9,7 +9,7 @@ scriptencoding utf-8
 "
 
 set autoindent        " can't live without it
-if has( "&copyindent" )
+if exists( '&copyindent' )
 	set copyindent    " stick to the file's existing indentation format for new indented lines
 endif
 set tabstop=4         " tabs displayed at 4 columns
@@ -17,7 +17,7 @@ set shiftwidth=0      " width of indents is identical to tabstop
 set softtabstop=-1    " tab key performs indentation by shiftwidth value
 set nolist            " [will selectively set this later] ensure we don't mess up the tabbing
 set listchars=tab:›·,trail:•,nbsp:— " and make it look nice
-if has( "&shiftround" )
+if exists( '&shiftround' )
 	set shiftround    " always in-/outdent to next tabstop
 endif
 set backspace=2       " allow backspacing over indent,eol,start
@@ -100,7 +100,7 @@ set showcmd             " show (partial) command in status line
 set report=1            " threshold for reporting how many lines were affected by a :cmd
 set linebreak           " word wrap mode
 set scrolloff=4         " scroll file when cursor gets this close to edge of window
-if has( "&sidescrolloff" )
+if exists( '&sidescrolloff' )
 	set sidescrolloff=2 " ... or to other edge of window
 endif
 set winminheight=0      " don't try to keep windows visible
