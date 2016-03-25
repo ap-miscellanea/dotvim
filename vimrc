@@ -76,7 +76,9 @@ if exists( ':filetype' )
 	" ... and now the filetypedetect augroup is filled, so this will go last:
 	autocmd filetypedetect BufNewFile,BufRead,StdinReadPost * setfiletype unknown
 	" ... which makes this reliable:
-	autocmd FileType text,mail,markdown,xml,xhtml,html,unknown setlocal wrap nolist
+	exe 'autocmd FileType text,mail,markdown,xml,xhtml,html,unknown setlocal wrap'
+		\ exists( '&breakindent' ) ? '' : 'nolist'
+		" setting &list breaks &linebreak in Vims that do not have &breakindent
 endif
 
 
@@ -95,6 +97,9 @@ set ruler               " show cursor Y,X in status line
 set number              " show line numbers
 set showcmd             " show (partial) command in status line
 set report=1            " threshold for reporting how many lines were affected by a :cmd
+if exists( '&breakindent' )
+	set breakindent     " visually indent continuation lines to match the wrapped line
+endif
 set linebreak           " word wrap mode
 set nowrap              " but actually disable wrapping (in most filetypes)
 set scrolloff=4         " scroll file when cursor gets this close to edge of window
