@@ -15,7 +15,7 @@ endif
 set tabstop=4         " tabs displayed at 4 columns
 set shiftwidth=0      " width of indents is identical to tabstop
 set softtabstop=-1    " tab key performs indentation by shiftwidth value
-set nolist            " [will selectively set this later] ensure we don't mess up the tabbing
+set list              " ensure we don't mess up the tabbing
 set listchars=tab:›·,trail:•,nbsp:— " and make it look nice
 if exists( '&shiftround' )
 	set shiftround    " always in-/outdent to next tabstop
@@ -73,11 +73,10 @@ endif
 
 if exists( ':filetype' )
 	filetype plugin indent on
-
-	" disable wrapping in most any particular format except email, Markdown, XML and X?HTML
-	" NB: this needs to be done here and in this way so regular text files
-	" (which have no file type) will have the default wrapping enabled
-	autocmd FileType * if index(split('text mail markdown xml xhtml html'),&filetype) < 0 | setlocal nowrap list | end
+	" ... and now the filetypedetect augroup is filled, so this will go last:
+	autocmd filetypedetect BufNewFile,BufRead,StdinReadPost * setfiletype unknown
+	" ... which makes this reliable:
+	autocmd FileType text,mail,markdown,xml,xhtml,html,unknown setlocal wrap nolist
 endif
 
 
@@ -97,6 +96,7 @@ set number              " show line numbers
 set showcmd             " show (partial) command in status line
 set report=1            " threshold for reporting how many lines were affected by a :cmd
 set linebreak           " word wrap mode
+set nowrap              " but actually disable wrapping (in most filetypes)
 set scrolloff=4         " scroll file when cursor gets this close to edge of window
 if exists( '&sidescrolloff' )
 	set sidescrolloff=2 " ... or to other edge of window
