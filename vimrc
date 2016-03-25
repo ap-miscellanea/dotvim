@@ -15,8 +15,6 @@ endif
 set tabstop=4         " tabs displayed at 4 columns
 set shiftwidth=0      " width of indents is identical to tabstop
 set softtabstop=-1    " tab key performs indentation by shiftwidth value
-set list              " ensure we don't mess up the tabbing
-set listchars=tab:›·,trail:•,nbsp:— " and make it look nice
 if exists( '&shiftround' )
 	set shiftround    " always in-/outdent to next tabstop
 endif
@@ -58,10 +56,6 @@ if has( 'digraphs' )
 	digraphs :)  9786 " white smiling face
 endif
 
-" when switching buffers, preserve window view
-autocmd BufWinLeave * if !&diff | let b:winview = winsaveview() | endif
-autocmd BufWinEnter * if exists('b:winview') && !&diff | call winrestview(b:winview) | endif
-
 if has( 'wildmenu' )
 	set wildmenu
 	set wildmode=longest:full,list:full
@@ -69,16 +63,6 @@ if has( 'wildmenu' )
 	set wildignore+=*.bmp,*.gif,*.ico,*.jpg,*.png
 	set wildignore+=.git,.hg,.svn
 	set wildignore+=*~,*.swp,*.tmp
-endif
-
-if exists( ':filetype' )
-	filetype plugin indent on
-	" ... and now the filetypedetect augroup is filled, so this will go last:
-	autocmd filetypedetect BufNewFile,BufRead,StdinReadPost * setfiletype unknown
-	" ... which makes this reliable:
-	exe 'autocmd FileType text,mail,markdown,xml,xhtml,html,unknown setlocal wrap'
-		\ exists( '&breakindent' ) ? '' : 'nolist'
-		" setting &list breaks &linebreak in Vims that do not have &breakindent
 endif
 
 
@@ -91,17 +75,21 @@ if has( 'syntax' ) | syntax enable | endif
 let colors_name='' " define it to keep stock gvimrc from loading a colorscheme
 if exists( ':colorscheme' ) && ! has( 'gui_running' ) | colorscheme railscasts | endif
 
+if exists( '&breakindent' )
+	set breakindent     " visually indent continuation lines to match the wrapped line
+endif
+set linebreak           " word wrap mode
+set nowrap              " but actually disable wrapping (in most filetypes)
+set list                " ensure we don't mess up the tabbing
+set listchars=tab:›·    " and make that look nice
+set listchars+=trail:•  " also ensure we don't miss trailing whitespace
+set listchars+=nbsp:—   " make literal non-break spaces visible
 set incsearch           " incremental search is convenient
 set hlsearch            " ... and search highlighting helpful
 set ruler               " show cursor Y,X in status line
 set number              " show line numbers
 set showcmd             " show (partial) command in status line
 set report=1            " threshold for reporting how many lines were affected by a :cmd
-if exists( '&breakindent' )
-	set breakindent     " visually indent continuation lines to match the wrapped line
-endif
-set linebreak           " word wrap mode
-set nowrap              " but actually disable wrapping (in most filetypes)
 set scrolloff=4         " scroll file when cursor gets this close to edge of window
 if exists( '&sidescrolloff' )
 	set sidescrolloff=2 " ... or to other edge of window
@@ -116,8 +104,22 @@ set noerrorbells        " shut up
 set visualbell          " shut up
 set t_vb=               " no really, shut up
 
+if exists( ':filetype' )
+	filetype plugin indent on
+	" ... and now the filetypedetect augroup is filled, so this will go last:
+	autocmd filetypedetect BufNewFile,BufRead,StdinReadPost * setfiletype unknown
+	" ... which makes this reliable:
+	exe 'autocmd FileType text,mail,markdown,xml,xhtml,html,unknown setlocal wrap'
+		\ exists( '&breakindent' ) ? '' : 'nolist'
+		" setting &list breaks &linebreak in Vims that do not have &breakindent
+endif
+
 " set up bookmarks menu
 if has( 'menu' ) | exe 'anoremenu Book&marks.&Settings :e' expand( '<sfile>' ) . '<CR>' | endif
+
+" when switching buffers, preserve window view
+autocmd BufWinLeave * if !&diff | let b:winview = winsaveview() | endif
+autocmd BufWinEnter * if exists('b:winview') && !&diff | call winrestview(b:winview) | endif
 
 " not needed there
 autocmd CmdwinEnter * set nonumber
