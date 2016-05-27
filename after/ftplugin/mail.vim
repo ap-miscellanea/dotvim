@@ -29,7 +29,7 @@ function! s:fixup()
 				try | echoerr 'Multiple identities' | endtry
 			endif
 
-			let identity = 'ident_' . matchstr( getline('.'), '^@@ *\zs[^ ]*' )
+			let identity = matchstr( getline('.'), '^@@ *\zs[^ ]*' )
 			delete
 
 			exe '1,'.(headerbreak - 1).'s/\c^From: \?\zs.*/\=identity/e'
