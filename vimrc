@@ -72,8 +72,11 @@ endif
 
 if has( 'syntax' ) | syntax enable | endif
 
-let colors_name='' " define it to keep stock gvimrc from loading a colorscheme
-if exists( ':colorscheme' ) && ! has( 'gui_running' ) | colorscheme railscasts | endif
+if has( 'gui_running' )
+	let colors_name='' " keep stock gvimrc from loading a colorscheme
+elseif exists( ':colorscheme' )
+	colorscheme railscasts
+endif
 
 if exists( '&breakindent' )
 	set breakindent     " visually indent continuation lines to match the wrapped line
