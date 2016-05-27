@@ -75,7 +75,9 @@ if has( 'syntax' ) | syntax enable | endif
 if has( 'gui_running' )
 	let colors_name='' " keep stock gvimrc from loading a colorscheme
 elseif exists( ':colorscheme' )
-	colorscheme railscasts
+	set background=dark
+	colorscheme PaperColor
+	hi Normal ctermbg=NONE
 endif
 
 if exists( '&breakindent' )
