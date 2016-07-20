@@ -9,8 +9,10 @@ endfunc
 " this needs to be called from vimrc to set up &runtimepath
 " before Vim goes on its scan for plugins (which it only does once)
 function runtimepath#setup()
+	let rtp = split( &runtimepath, ',' )
+
 	let seen = {}
-	call map( split( &runtimepath, ',' ), 'extend( seen, { v:val : 1 } )' )
+	call map( copy(rtp), 'extend( seen, { v:val : 1 } )' )
 
 	let bundlepath = join( filter( runtimepath#globpathlist( &runtimepath, 'bundle/*/.' ), '!has_key(seen, v:val)' ), ',' )
 	for path in runtimepath#globpathlist( bundlepath, 'doc/.' )
@@ -21,8 +23,10 @@ function runtimepath#setup()
 
 	let bundleafter = join( filter( runtimepath#globpathlist( bundlepath, 'after/.' ), '!has_key(seen, v:val)' ), ',' )
 
-	let rtp = split( &runtimepath, ',\ze[^,]*/after\(,\|$\)' )
-	call extend( rtp, [ bundlepath ], 1 )
-	call extend( rtp, [ bundleafter ] )
+	set runtimepath&vim
+	let [ uservim, uservimafter ] = split( &runtimepath, ',.*,' )
+
+	call extend( rtp, [ bundlepath ],  index(rtp, uservim) + 1 )
+	call extend( rtp, [ bundleafter ], len(rtp) - index(reverse(copy(rtp)), uservimafter) - 1 )
 	let &runtimepath = join( filter( rtp, '!empty(v:val)' ), ',' )
 endfunc
