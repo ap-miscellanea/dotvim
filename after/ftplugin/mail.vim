@@ -45,25 +45,6 @@ function! s:fixup()
 	" delete empty sig
 	if search('^-- $', 'cW') | delete | endif
 
-	" check if body mentions any attachments and add header to indicate so
-	" and take care to adjust cursor position to match afterwards
-	let body = filter( getline( headerbreak + 1, sigbreak ? sigbreak -1 : '$' ), 'v:val !~ "^>"' )
-	if match( body, '\c\v<(anbei>|angehängt>|Anhang>|attach|enclose)' ) >= 0
-		let i = 1
-		while i < headerbreak
-			if getline(i) =~ '\c^X-Require-Multipart:'
-				exe i 'delete'
-				if saveview.lnum > i | let saveview.lnum -= 1 | endif
-				let headerbreak -= 1
-				continue
-			endif
-			let i += 1
-		endwhile
-		call append(headerbreak - 1, 'X-Require-Multipart: yes')
-		if saveview.lnum >= headerbreak | let saveview.lnum += 1 | endif
-		let headerbreak += 1
-	endif
-
 	call winrestview(saveview)
 endfunction
 
