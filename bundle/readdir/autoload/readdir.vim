@@ -27,24 +27,26 @@ if v:version < 700
 	finish
 endif
 
+exe printf( join( [ 'function s:glob(path, nosuf)', 'return %s', 'endfunction' ], "\n" ),
+	\ v:version < 704 ? 'split(glob(a:path, a:nosuf), "\n")' : 'glob(a:path, a:nosuf, 1)' )
+
 let g:readdir_hidden = get(g:, 'readdir_hidden', 0)
 
 function s:set_bufname(name)
-	if bufname('%') == a:name | return | endif
-	silent! file `=a:name`
-	exe 'silent! bwipeout!' bufnr('#')
+	if bufname('%') == a:name | return 1 | endif
+	let prev_alt = bufnr('#')
+	silent! file `=a:name` " on success, creates an alt buffer to hold the old name
+	if bufnr('#') != prev_alt | exe 'silent! bwipeout!' bufnr('#') | endif
+	return bufname('%') == a:name
 endfunction
 
-function s:current_entry()
+function readdir#Selected()
 	return b:readdir_content[ line('.') - 1 ]
 endfunction
 
 function readdir#Setup()
-	if ! exists('b:readdir_cwd')
-		let path = expand('<afile>')
-		if ! isdirectory(path) | return | endif
-		let b:readdir_cwd = simplify(fnamemodify(path, ':p'))
-	endif
+	let path = expand('<afile>')
+	if ! isdirectory(path) | return | endif
 
 	if ! exists('b:readdir_id')
 		let id = range(1,bufnr('$'))
@@ -53,76 +55,74 @@ function readdir#Setup()
 		let b:readdir_id = id[0]
 	endif
 
-	nnoremap <buffer> <silent> <CR> :call readdir#Open()<CR>
-	nnoremap <buffer> <silent> o    :call readdir#OpenNew()<CR>
+	nnoremap <buffer> <silent> <CR> :call readdir#Open( readdir#Selected() )<CR>
+	nnoremap <buffer> <silent> o    :edit `=readdir#Selected()`<CR>
+	nnoremap <buffer> <silent> t    :tabedit `=readdir#Selected()`<CR>
+	nnoremap <buffer> <silent> -    :call readdir#Open( fnamemodify( b:readdir_cwd, ':h' ) )<CR>
 	nnoremap <buffer> <silent> a    :call readdir#CycleHidden()<CR>
 	setlocal undolevels=-1 buftype=nofile filetype=readdir
 
-	call readdir#Show()
+	call readdir#Show( simplify( fnamemodify(path, ':p').'.' ), '' )
+
+	autocmd ReadDir BufEnter <buffer> silent lchdir `=b:readdir_cwd`
 endfunction
 
-function readdir#Show()
-	if ! exists('b:readdir_cwd') | return | endif
+function readdir#Show(path, focus)
+	if a:path == get(b:, 'readdir_cwd', '') | return | endif
+	let b:readdir_cwd = a:path
 
-	let path = simplify(b:readdir_cwd.'/.')
-	call s:set_bufname(printf('(%d) %s', b:readdir_id, path))
+	silent lchdir `=b:readdir_cwd`
+	call s:set_bufname(printf('(%d) %s', b:readdir_id, b:readdir_cwd))
 
-	let b:readdir_content = glob(path.'/*', g:readdir_hidden, 1)
-	if g:readdir_hidden == 2
-		call extend(b:readdir_content, glob(path.'/.?*', 0, 1), 0)
-	elseif isdirectory(path.'/..')
-		call extend(b:readdir_content, [path.'/..'], 0)
-	endif
+	let path = fnamemodify(b:readdir_cwd, ':p') " ensure trailing slash
+	let b:readdir_content
+		\ = [fnamemodify(b:readdir_cwd,':h')]
+		\ + ( g:readdir_hidden == 2 ? s:glob(path.'.[^.]', 0) + s:glob(path.'.??*', 0) : [] )
+		\ + s:glob(path.'*', g:readdir_hidden)
 
 	let prettied = map(copy(b:readdir_content), 'substitute(v:val, "^.*/", "", "") . ( isdirectory(v:val) ? "/" : "" )')
-	if '../' == prettied[0]
-		let prettied[0] = '..'
-		let b:readdir_content[0] = simplify(b:readdir_content[0])
-	endif
+	let prettied[0] = '..'
 
 	setlocal modifiable
-	0,$ delete
+	silent 0,$ delete
 	call setline(1, prettied)
 	setlocal nomodifiable nomodified
 
 	let line = 1
-	if exists('b:readdir_prev')
-		let line = 1 + index(b:readdir_content, b:readdir_prev)
+	if strlen(a:focus)
+		let line = 1 + index(b:readdir_content, a:focus)
 		let line += line == 0
-		unlet b:readdir_prev
 	endif
 	call cursor(line, 1)
 endfunction
 
-function readdir#Open()
-	let path = s:current_entry()
+function readdir#Open(path)
+	if isdirectory(a:path) | return readdir#Show( a:path, b:readdir_cwd ) | endif
 
-	if isdirectory(path)
-		let b:readdir_prev = b:readdir_cwd
-		let b:readdir_cwd = path
-		return readdir#Show()
+	if s:set_bufname(a:path)
+		silent chdir `=expand('%:p:h')` " reset haslocaldir()
+		unlet b:readdir_id b:readdir_cwd b:readdir_content
+		setlocal modifiable< buftype< filetype<
+		mapclear <buffer>
+		autocmd! ReadDir BufEnter <buffer>
+
+		go | edit
+		setlocal undolevels< " left late to avoid leaving the content change during :edit on undo stack
+
+		" :file sets the notedited flag but :edit does not clear it (see :help not-edited)
+		" HACK: intercept one write, then pretend to write the file, clearing the notedited flag
+		autocmd ReadDir BufWriteCmd <buffer> autocmd! ReadDir BufWriteCmd <buffer>
+		write!
+	else " file already open in another buffer, just switch
+		let me = bufnr('%')
+		exe 'edit' a:path
+		exe 'silent! bwipeout!' me
 	endif
-
-	unlet b:readdir_id b:readdir_cwd b:readdir_content
-	setlocal modifiable< buftype< filetype<
-	mapclear <buffer>
-	call s:set_bufname(path) | go | edit
-	setlocal undolevels< " left late to avoid leaving the content change during :edit on undo stack
-
-	" :file sets the notedited flag but :edit does not clear it (see :help not-edited)
-	" HACK: intercept one write, then pretend to write the file, clearing the notedited flag
-	autocmd ReadDir BufWriteCmd <buffer> autocmd! ReadDir BufWriteCmd <buffer>
-	write!
-endfunction
-
-function readdir#OpenNew()
-	edit `=s:current_entry()`
 endfunction
 
 function readdir#CycleHidden()
 	let g:readdir_hidden = ( g:readdir_hidden + 1 ) % 3
-	let b:readdir_prev = s:current_entry()
-	call readdir#Show()
+	call readdir#Show( b:readdir_cwd, readdir#Selected() )
 endfunction
 
 " vim:foldmethod=marker
