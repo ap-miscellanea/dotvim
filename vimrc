@@ -13,8 +13,8 @@ if exists( '&copyindent' )
 	set copyindent    " stick to the file's existing indentation format for new indented lines
 endif
 set tabstop=4         " tabs displayed at 4 columns
-set shiftwidth=0      " width of indents is identical to tabstop
-set softtabstop=-1    " tab key performs indentation by shiftwidth value
+set softtabstop=4     " tab key shifts by 4 columns
+set shiftwidth=4      " indentation at 4 columns
 if exists( '&shiftround' )
 	set shiftround    " always in-/outdent to next tabstop
 endif
