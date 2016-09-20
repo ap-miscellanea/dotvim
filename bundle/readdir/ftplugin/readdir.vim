@@ -27,7 +27,21 @@ if ! has('patch-7.2.051')
 	finish
 endif
 
-augroup ReadDir | augroup END
-autocmd filetypedetect BufEnter,BufNewFile * if isdirectory(expand('<afile>')) | setf readdir | endif
+if exists('b:readdir') || ! isdirectory(expand('%')) | finish | endif
+
+let id = range(1,bufnr('$'))
+let taken = map(copy(id),'getbufvar(v:val,"readdir_id")')
+let b:readdir = { 'id': filter(id,'index(taken,v:val) < 0')[0] }
+let b:readdir.hidden = get(g:, 'readdir_hidden', 0)
+
+setlocal buftype=nofile noswapfile undolevels=-1 nomodifiable nowrap
+call readdir#Show( simplify( expand('%:p').'.' ), '' )
+
+autocmd ReadDir BufEnter <buffer> silent lchdir `=b:readdir.cwd`
+nnoremap <buffer> <silent> <CR> :call readdir#Open( readdir#Selected() )<CR>
+nnoremap <buffer> <silent> o    :edit `=readdir#Selected()`<CR>
+nnoremap <buffer> <silent> t    :tabedit `=readdir#Selected()`<CR>
+nnoremap <buffer> <silent> -    :call readdir#Open( b:readdir.content[0] )<CR>
+nnoremap <buffer> <silent> a    :call readdir#CycleHidden()<CR>
 
 " vim:foldmethod=marker
