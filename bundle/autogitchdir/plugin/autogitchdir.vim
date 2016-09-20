@@ -5,12 +5,9 @@ function! ChangeToDirFromBuffer()
 	if -1 < index(['help','nofile','acwrite'], &buftype) | return | endif
 	if bufname('%') =~ '://' | return | endif
 	lcd %:p:h
-	if ! has('win32')
-		let git_dir = substitute( system( 'git rev-parse --show-toplevel' ), '\n.*', '', '' )
-		if isdirectory( git_dir ) | exe 'lcd' git_dir | endif
-	endif
+	if has('win32') | return | endif
+	let git_dir = matchstr( system( 'git rev-parse --show-cdup' ), '^.*\ze\n' )
+	if isdirectory( git_dir ) | lcd `=git_dir` | endif
 endfunction
 
 autocmd BufEnter * call ChangeToDirFromBuffer()
-
-nnoremap <Leader>e :e <C-R>=substitute(expand('%:h').'/','^\.\?/$','','')<CR>

@@ -29,6 +29,9 @@ endfunction
 omap <expr> / <SID>CenterOnOperatorPendingSearch("/")
 omap <expr> ? <SID>CenterOnOperatorPendingSearch("?")
 
+" open file in the current buffer’s directory
+nnoremap <Leader>e :e <C-R>=substitute(expand('%:h').'/','^\.\?/$','','')<CR>
+
 " I never want to use Ex mode. Map this to something useful?
 " But baking it into muscle memory would be counterproductive
 " whenever I need to use a stock Vim
