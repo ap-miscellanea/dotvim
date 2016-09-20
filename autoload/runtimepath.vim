@@ -3,12 +3,16 @@ exe printf( join( [ 'function s:globpathdir(path, expr)', 'return map(%s,''fname
 	\ : has('patch-7.2.051') ? 'split(globpath(a:path, a:expr."/.", 0), "\n")'
 	\ : 'split(globpath(a:path, a:expr."/."), "\n")' )
 
+exe printf( join( [ 'function s:uniq(list)', '%s', 'endfunction' ], "\n" )
+	\ , has('patch-7.4.218') ? 'return uniq(a:list)'
+	\ : 'let seen = {}'. "\n" . 'return filter(copy(a:list),''has_key(seen,v:val) ? 0 : len(extend(seen,{v:val : 1}))'')' )
+
 " this needs to be called from vimrc to set up &runtimepath
 " before Vim goes on its scan for plugins (which it only does once)
 function runtimepath#setup()
 	let rtp = split( &runtimepath, ',' )
 
-	let bundles = s:globpathdir( join(uniq(map(copy(rtp),'resolve(v:val)')),','), 'bundle/*' )
+	let bundles = s:globpathdir( join(s:uniq(map(copy(rtp),'resolve(v:val)')),','), 'bundle/*' )
 
 	for docdir in filter( s:globpathdir( join( bundles, ',' ), 'doc' ), 'filewritable(v:val) == 2' )
 		if empty( glob( docdir . "/tags{,-??}" ) ) | helptags `=docdir` | endif
