@@ -19,7 +19,7 @@ command! GreekPants call s:GreekPants()
 function s:ClearUndo()
 	let saved = [&undolevels, &modified]
 	set undolevels=-1
-	exe "normal i \<BS>\<Esc>"
+	call setline('.', getline('.'))
 	let [&undolevels, &modified] = saved
 endfunction
 command! ClearUndo call s:ClearUndo()
