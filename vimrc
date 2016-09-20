@@ -20,6 +20,7 @@ if exists( '&shiftround' )
 endif
 set backspace=2       " allow backspacing over indent,eol,start
 set nojoinspaces      " don't treat [.?!] specially when joining lines.
+set nrformats-=octal  " the heuristic for octals is too broad
 set nostartofline     " don't jump to start of line on paging motions
 set spelllang=el,de,en_gb
 set autowrite         " auto-save prior to :! :make and others
