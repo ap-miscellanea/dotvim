@@ -1,30 +1,16 @@
-exe printf( join( [ 'function s:globpathdir(path, expr)', 'return map(%s,''fnamemodify(v:val,":h")'')', 'endfunction' ], "\n" )
-	\ , has('patch-7.3.465') ? 'globpath(a:path, a:expr."/.", 0, 1)'
-	\ : has('patch-7.2.051') ? 'split(globpath(a:path, a:expr."/.", 0), "\n")'
-	\ : 'split(globpath(a:path, a:expr."/."), "\n")' )
-
-exe printf( join( [ 'function s:uniq(list)', '%s', 'endfunction' ], "\n" )
-	\ , has('patch-7.4.218') ? 'return uniq(a:list)'
-	\ : 'let seen = {}'. "\n" . 'return filter(copy(a:list),''has_key(seen,v:val) ? 0 : len(extend(seen,{v:val : 1}))'')' )
-
 " this needs to be called from vimrc to set up &runtimepath
 " before Vim goes on its scan for plugins (which it only does once)
 function runtimepath#setup()
 	let rtp = split( &runtimepath, ',' )
+	let bundle = rtp[0].'/bundle/*'
 
-	let bundles = s:globpathdir( join(s:uniq(map(copy(rtp),'resolve(v:val)')),','), 'bundle/*' )
-
-	for docdir in filter( s:globpathdir( join( bundles, ',' ), 'doc' ), 'filewritable(v:val) == 2' )
-		if empty( glob( docdir . "/tags{,-??}" ) ) | helptags `=docdir` | endif
-	endfor
-
-	let bundlepath = join( map( bundles, 'fnamemodify(v:val, ":~")' ), ',' )
-	let bundleafter = join( s:globpathdir( bundlepath, 'after' ), ',' )
-
-	set runtimepath&vim
-	let [ uservim, uservimafter ] = split( &runtimepath, ',.*,' )
-
-	call extend( rtp, [ bundlepath ],  index(rtp, uservim) + 1 )
-	call extend( rtp, [ bundleafter ], len(rtp) - index(reverse(copy(rtp)), uservimafter) - 1 )
+	let after = index( rtp, rtp[0].'/after' )
+	call extend( rtp, [bundle.'/after'], -1 < after ? after : 1 )
+	call extend( rtp, [bundle], 1 )
 	let &runtimepath = join( rtp, ',' )
+
+	let existing = map( split( glob( bundle.'/doc/tags{,-??}', 0 ), "\n" ), 'fnamemodify(v:val,'':h'')' )
+	for docdir in filter( split( glob( bundle.'/doc', 0 ), "\n" ), '-1 == index(existing, v:val)' )
+		helptags `=docdir`
+	endfor
 endfunc
