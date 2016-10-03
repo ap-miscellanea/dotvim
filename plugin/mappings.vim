@@ -37,10 +37,6 @@ nnoremap <Leader>e :e <C-R>=substitute(expand('%:h').'/','^\.\?/$','','')<CR>
 " whenever I need to use a stock Vim
 nnoremap Q <Nop>
 
-" why do I care about top/bottom of screen?
-nnoremap H ^
-nnoremap L $
-
 " automatically break undo cycle at certain keys --
 " better granularity for undoing insert mode work
 inoremap <C-W>   <C-G>u<C-W>
