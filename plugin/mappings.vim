@@ -67,7 +67,7 @@ noremap  <expr> ÷ ''[setbufvar('%', '&keymap', len(&keymap) ? '' : 'greek_utf-8
 noremap! <expr> ÷ ''[setbufvar('%', '&keymap', len(&keymap) ? '' : 'greek_utf-8')]
 
 " press Ctrl-R twice to insert the value of the VimL expr currently yanked
-inoremap <C-R><C-R> <C-R>=eval(substitute(@","\n$",'',''))<C-M>
+inoremap <expr> <C-R><C-R> eval(matchstr(@", '.*[^\n]'))
 
 " fill in closing tags automatically
 function! BeforeCursor(char)
