@@ -8,8 +8,7 @@ function runtimepath#setup()
 	call extend( rtp, [bundle], 1 )
 	let &runtimepath = join( rtp, ',' )
 
-	let existing = map( split( glob( bundle.'/doc/tags{,-??}', 0 ), "\n" ), 'fnamemodify(v:val,'':h'')' )
-	for docdir in filter( split( glob( bundle.'/doc', 0 ), "\n" ), '-1 == index(existing, v:val)' )
+	for docdir in split( glob( bundle.'/doc', 0 ), "\n" )
 		helptags `=docdir`
 	endfor
 endfunc
