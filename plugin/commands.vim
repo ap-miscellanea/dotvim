@@ -6,16 +6,6 @@ command! -range DecodeURI <line1>,<line2>s/%\([0-9A-F]\{2}\)/\=nr2char('0x'.subm
 
 command! -range TidyHTML <line1>,<line2>!tidyp -q -utf8 -config ~/.tidy.conf.unintrusive
 
-function s:GreekPants()
-	silent! %s!\%u201C!«!g
-	silent! %s!<<!«!g
-	silent! %s!>>!»!g
-	silent! %s!\%u201D!»!g
-	silent! %s! - !\=' ' . nr2char(8211) . ' '!g
-	silent! %s!?!\=nr2char(894)!gc
-endfunction
-command! GreekPants call s:GreekPants()
-
 function s:ClearUndo()
 	let saved = [&undolevels, &modified]
 	set undolevels=-1
