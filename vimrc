@@ -112,6 +112,7 @@ set t_vb=               " no really, shut up
 
 if exists( ':filetype' )
 	filetype plugin indent on
+	autocmd filetypedetect BufRead,BufNewFile bash-fc-* call SetFileTypeSH('bash')
 	" ... and now the filetypedetect augroup is filled, so this will go last:
 	autocmd filetypedetect BufNewFile,BufRead,StdinReadPost * setfiletype unknown
 	" ... which makes this reliable:
