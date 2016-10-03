@@ -225,4 +225,4 @@ let g:is_posix = 1 " assume POSIX by default, not original Bourne shell
 "                       (must be done before Vim starts its scan for plugins)
 
 call runtimepath#setup() " add plugin bundles to &runtimepath
-call stockless#auto() " suppress the stock Vim plugins
+call stockless#setup() " suppress the stock Vim plugins

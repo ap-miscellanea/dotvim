@@ -1,5 +1,5 @@
 " this can be called at the very end of vimrc to suppress loading the stock Vim plugins
-function stockless#auto()
+function stockless#setup()
 	let g:real_rtp = &runtimepath
 	set rtp-=$VIMRUNTIME
 	if &rtp == g:real_rtp | unlet g:real_rtp | return | endif
