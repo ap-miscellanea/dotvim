@@ -70,7 +70,4 @@ noremap! <expr> ÷ ''[setbufvar('%', '&keymap', len(&keymap) ? '' : 'greek_utf-8
 inoremap <expr> <C-R><C-R> eval(matchstr(@", '.*[^\n]'))
 
 " fill in closing tags automatically
-function! BeforeCursor(char)
-	return a:char == getline('.')[col('.')-2]
-endfunction
-autocmd FileType * if strlen(&indentexpr) | exe 'inoremap <buffer> <expr> / BeforeCursor("<") ? "/\<C-X>\<C-O>" : "/"' | endif
+autocmd FileType * if len(&omnifunc) | exe 'inoremap <buffer> <expr> / getline(".")[col(".")-2] == "<" ? "/\<C-X>\<C-O>" : "/"' | endif
