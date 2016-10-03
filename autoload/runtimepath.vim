@@ -4,8 +4,7 @@ function runtimepath#setup()
 	let rtp = split( &runtimepath, ',' )
 	let bundle = rtp[0].'/bundle/*'
 
-	let after = index( rtp, rtp[0].'/after' )
-	call extend( rtp, [bundle.'/after'], -1 < after ? after : 1 )
+	call extend( rtp, [bundle.'/after'], abs( index( rtp, rtp[0].'/after' ) ) )
 	call extend( rtp, [bundle], 1 )
 	let &runtimepath = join( rtp, ',' )
 
