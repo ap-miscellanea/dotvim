@@ -62,13 +62,9 @@ nnoremap <silent> <Leader>i :call <SID>quickfix_perl_toc()<CR>
 " get spelling suggestions in a completion menu, easily
 nnoremap <Leader>s a<C-X><C-S>
 
-function s:toggle_greek_keymap()
-	let &keymap = len(&keymap) ? '' : 'greek_utf-8'
-	return ''
-endfunction
 " option-/ on Mac US layout
-nnoremap <expr> ÷ <SID>toggle_greek_keymap()
-inoremap <expr> ÷ <SID>toggle_greek_keymap()
+noremap  <expr> ÷ ''[setbufvar('%', '&keymap', len(&keymap) ? '' : 'greek_utf-8')]
+noremap! <expr> ÷ ''[setbufvar('%', '&keymap', len(&keymap) ? '' : 'greek_utf-8')]
 
 " press Ctrl-R twice to insert the value of the VimL expr currently yanked
 inoremap <C-R><C-R> <C-R>=eval(substitute(@","\n$",'',''))<C-M>
