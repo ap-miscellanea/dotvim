@@ -121,7 +121,7 @@ if exists( ':filetype' )
 endif
 
 " set up bookmarks menu
-if has( 'menu' ) | exe 'anoremenu Book&marks.&Settings :e' expand( '<sfile>' ) . '<CR>' | endif
+if has( 'menu' ) | exe 'anoremenu 100.9999 Book&marks.&Settings :e' expand( '<sfile>' ) . '<CR>' | endif
 
 " when switching buffers, preserve window view
 autocmd BufWinLeave * if !&diff | let b:winview = winsaveview() | endif
