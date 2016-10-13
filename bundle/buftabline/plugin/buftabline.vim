@@ -46,7 +46,8 @@ function! buftabline#user_buffers() " help buffers are always unlisted, but quic
 	return filter(range(1,bufnr('$')),'buflisted(v:val) && "quickfix" !=? getbufvar(v:val, "&buftype")')
 endfunction
 
-let s:prev_currentbuf = winbufnr(0)
+let s:dirsep = fnamemodify(getcwd(),':p')[-1:]
+let s:centerbuf = winbufnr(0)
 function! buftabline#render()
 	let show_num = g:buftabline_numbers == 1
 	let show_ord = g:buftabline_numbers == 2
@@ -54,27 +55,28 @@ function! buftabline#render()
 	let lpad     = g:buftabline_separators ? nr2char(0x23B8) : ' '
 
 	let bufnums = buftabline#user_buffers()
+	let centerbuf = s:centerbuf " prevent tabline jumping around when non-user buffer current (e.g. help)
 
 	" pick up data on all the buffers
 	let tabs = []
-	let tabs_by_tail = {}
+	let path_tabs = []
+	let tabs_per_tail = {}
 	let currentbuf = winbufnr(0)
 	let screen_num = 0
 	for bufnum in bufnums
 		let screen_num = show_num ? bufnum : show_ord ? screen_num + 1 : ''
 		let tab = { 'num': bufnum }
 		let tab.hilite = currentbuf == bufnum ? 'Current' : bufwinnr(bufnum) > 0 ? 'Active' : 'Hidden'
+		if currentbuf == bufnum | let [centerbuf, s:centerbuf] = [bufnum, bufnum] | endif
 		let bufpath = bufname(bufnum)
 		if strlen(bufpath)
-			let bufpath = substitute(fnamemodify(bufpath, ':p:~:.'), '^$', '.', '')
-			let suf = isdirectory(bufpath) ? '/' : ''
-			if strlen(suf) | let bufpath = fnamemodify(bufpath, ':h') | endif
-			let tab.head = fnamemodify(bufpath, ':h')
-			let tab.tail = fnamemodify(bufpath, ':t')
+			let tab.path = fnamemodify(bufpath, ':p:~:.')
+			let tab.sep = strridx(tab.path, s:dirsep, strlen(tab.path) - 2) " keep trailing dirsep
+			let tab.label = tab.path[tab.sep + 1:]
 			let pre = ( show_mod && getbufvar(bufnum, '&mod') ? '+' : '' ) . screen_num
-			if strlen(pre) | let pre .= ' ' | endif
-			let tab.fmt = pre . '%s' . suf
-			let tabs_by_tail[tab.tail] = get(tabs_by_tail, tab.tail, []) + [tab]
+			let tab.pre = strlen(pre) ? pre . ' ' : ''
+			let tabs_per_tail[tab.label] = get(tabs_per_tail, tab.label, 0) + 1
+			let path_tabs += [tab]
 		elseif -1 < index(['nofile','acwrite'], getbufvar(bufnum, '&buftype')) " scratch buffer
 			let tab.label = ( show_mod ? '!' . screen_num : screen_num ? screen_num . ' !' : '!' )
 		else " unnamed file
@@ -85,18 +87,14 @@ function! buftabline#render()
 	endfor
 
 	" disambiguate same-basename files by adding trailing path segments
-	while 1
-		let groups = filter(values(tabs_by_tail),'len(v:val) > 1')
-		if ! len(groups) | break | endif
-		for group in groups
-			call remove(tabs_by_tail, group[0].tail)
-			for tab in group
-				if strlen(tab.head) && tab.head != '.'
-					let tab.tail = fnamemodify(tab.head, ':t') . '/' . tab.tail
-					let tab.head = fnamemodify(tab.head, ':h')
-				endif
-				let tabs_by_tail[tab.tail] = get(tabs_by_tail, tab.tail, []) + [tab]
-			endfor
+	while len(filter(tabs_per_tail, 'v:val > 1'))
+		let [ambiguous, tabs_per_tail] = [tabs_per_tail, {}]
+		for tab in path_tabs
+			if -1 < tab.sep && has_key(ambiguous, tab.label)
+				let tab.sep = strridx(tab.path, s:dirsep, tab.sep - 1)
+				let tab.label = tab.path[tab.sep + 1:]
+			endif
+			let tabs_per_tail[tab.label] = get(tabs_per_tail, tab.label, 0) + 1
 		endfor
 	endwhile
 
@@ -106,20 +104,12 @@ function! buftabline#render()
 	let lft = { 'lasttab':  0, 'cut':  '.', 'indicator': '<', 'width': 0, 'half': &columns / 2 }
 	let rgt = { 'lasttab': -1, 'cut': '.$', 'indicator': '>', 'width': 0, 'half': &columns - lft.half }
 
-	" 2. if current buffer not a user buffer, remember the previous one
-	"    (to keep the tabline from jumping around e.g. when browsing help)
-	if -1 == index(bufnums, currentbuf)
-		let currentbuf = s:prev_currentbuf
-	else
-		let s:prev_currentbuf = currentbuf
-	endif
-
-	" 3. sum the string lengths for the left and right halves
+	" 2. sum the string lengths for the left and right halves
 	let currentside = lft
 	for tab in tabs
-		let tab.label = lpad . ( has_key(tab, 'fmt') ? printf(tab.fmt, tab.tail) : tab.label ) . ' '
+		let tab.label = lpad . get(tab, 'pre', '') . tab.label . ' '
 		let tab.width = strwidth(tab.label)
-		if currentbuf == tab.num
+		if centerbuf == tab.num
 			let halfwidth = tab.width / 2
 			let lft.width += halfwidth
 			let rgt.width += tab.width - halfwidth
@@ -128,30 +118,29 @@ function! buftabline#render()
 		endif
 		let currentside.width += tab.width
 	endfor
-	if 0 == rgt.width " no current window seen?
+	if currentside is lft " centered buffer not seen?
 		" then blame any overflow on the right side, to protect the left
 		let [lft.width, rgt.width] = [0, lft.width]
 	endif
 
 	" 3. toss away tabs and pieces until all fits:
 	if ( lft.width + rgt.width ) > &columns
-		for [side,otherside] in [ [lft,rgt], [rgt,lft] ]
-			if side.width > side.half
-				let remainder = otherside.width < otherside.half ? &columns - otherside.width : side.half
-				let delta = side.width - remainder
-				" toss entire tabs to close the distance
-				while delta >= tabs[side.lasttab].width
-					let gain = tabs[side.lasttab].width
-					let delta -= gain
-					call remove(tabs, side.lasttab, side.lasttab)
-				endwhile
-				" then snip at the last one to make it fit
-				let endtab = tabs[side.lasttab]
-				while delta > ( endtab.width - strwidth(endtab.label) )
-					let endtab.label = substitute(endtab.label, side.cut, '', '')
-				endwhile
-				let endtab.label = substitute(endtab.label, side.cut, side.indicator, '')
-			endif
+		let [oversized, remainder]
+		\ = lft.width < lft.half ? [ [rgt], &columns - lft.width ]
+		\ : rgt.width < rgt.half ? [ [lft], &columns - rgt.width ]
+		\ :                        [ [lft, rgt], 0 ]
+		for side in oversized
+			let delta = side.width - ( remainder ? remainder : side.half )
+			" toss entire tabs to close the distance
+			while delta >= tabs[side.lasttab].width
+				let delta -= remove(tabs, side.lasttab).width
+			endwhile
+			" then snip at the last one to make it fit
+			let endtab = tabs[side.lasttab]
+			while delta > ( endtab.width - strwidth(endtab.label) )
+				let endtab.label = substitute(endtab.label, side.cut, '', '')
+			endwhile
+			let endtab.label = substitute(endtab.label, side.cut, side.indicator, '')
 		endfor
 	endif
 
