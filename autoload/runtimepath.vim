@@ -4,11 +4,12 @@ function runtimepath#setup()
 	let rtp = split( &runtimepath, ',' )
 	let bundle = rtp[0].'/bundle/*'
 
-	call extend( rtp, [bundle.'/after'], abs( index( rtp, rtp[0].'/after' ) ) )
+	let after = index( rtp, rtp[0].'/after' )
+	call extend( rtp, [bundle.'/after'], -1 < after ? after : 1 )
 	call extend( rtp, [bundle], 1 )
 	let &runtimepath = join( rtp, ',' )
 
-	for docdir in split( glob( bundle.'/doc', 0 ), "\n" )
+	for docdir in split( glob( bundle.'/doc' ), "\n" )
 		helptags `=docdir`
 	endfor
 endfunc
