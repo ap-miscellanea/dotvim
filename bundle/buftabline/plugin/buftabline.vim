@@ -22,8 +22,8 @@
 " THE SOFTWARE.
 " }}}
 
-if v:version < 703 " because of strwidth()
-	echoerr printf('Vim 7.3 is required for buftabline (this is only %d.%d)',v:version/100,v:version%100)
+if v:version < 700
+	echoerr printf('Vim 7 is required for buftabline (this is only %d.%d)',v:version/100,v:version%100)
 	finish
 endif
 
@@ -108,7 +108,7 @@ function! buftabline#render()
 	let currentside = lft
 	for tab in tabs
 		let tab.label = lpad . get(tab, 'pre', '') . tab.label . ' '
-		let tab.width = strwidth(tab.label)
+		let tab.width = strwidth(strtrans(tab.label))
 		if centerbuf == tab.num
 			let halfwidth = tab.width / 2
 			let lft.width += halfwidth
@@ -137,7 +137,7 @@ function! buftabline#render()
 			endwhile
 			" then snip at the last one to make it fit
 			let endtab = tabs[side.lasttab]
-			while delta > ( endtab.width - strwidth(endtab.label) )
+			while delta > ( endtab.width - strwidth(strtrans(endtab.label)) )
 				let endtab.label = substitute(endtab.label, side.cut, '', '')
 			endwhile
 			let endtab.label = substitute(endtab.label, side.cut, side.indicator, '')
@@ -146,7 +146,7 @@ function! buftabline#render()
 
 	if len(tabs) | let tabs[0].label = substitute(tabs[0].label, lpad, ' ', '') | endif
 
-	return '%1X' . join(map(tabs,'printf("%%#BufTabLine%s#%s",v:val.hilite,v:val.label)'),'') . '%#BufTabLineFill#'
+	return '%1X' . join(map(tabs,'printf("%%#BufTabLine%s#%s",v:val.hilite,strtrans(v:val.label))'),'') . '%#BufTabLineFill#'
 endfunction
 
 function! buftabline#update(deletion)
@@ -186,3 +186,18 @@ noremap <silent> <Plug>BufTabLine.Go(7)  :exe 'b'.buftabline#user_buffers()[6]<c
 noremap <silent> <Plug>BufTabLine.Go(8)  :exe 'b'.buftabline#user_buffers()[7]<cr>
 noremap <silent> <Plug>BufTabLine.Go(9)  :exe 'b'.buftabline#user_buffers()[8]<cr>
 noremap <silent> <Plug>BufTabLine.Go(10) :exe 'b'.buftabline#user_buffers()[9]<cr>
+
+if v:version < 703
+	function s:transpile()
+		let [ savelist, &list ] = [ &list, 0 ]
+		redir => src
+			silent function buftabline#render
+		redir END
+		let &list = savelist
+		let src = substitute(src, '\n\zs[0-9 ]*', '', 'g')
+		let src = substitute(src, 'strwidth(strtrans(\([^)]\+\)))', 'strlen(substitute(\1, ''\p\|\(.\)'', ''x\1'', ''g''))', 'g')
+		return src
+	endfunction
+	exe "delfunction buftabline#render\n" . s:transpile()
+	delfunction s:transpile
+endif
