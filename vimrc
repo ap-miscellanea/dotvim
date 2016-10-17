@@ -32,7 +32,8 @@ set undolevels=5000   " 5x the default
 set shortmess+=Is     " supress intro message and search wrap-around message
 set shortmess+=mr     " shorten flags [Modified] and [readonly]
 set shortmess-=tT     " don't truncate file messages
-set viminfo='0,h      " don't remember marks, don't limit memory of any registers
+set viminfo='1000,h   " remove limits on register content size, keep marks for 10x as many files
+set viminfo+=f0       " forget user marks in order to forget the jumplist (docs say '0 does that but nope)
 set viminfo+=n~/.vim/.info " don't litter in $HOME
 
 " Make vim work with the 'crontab -e' command
