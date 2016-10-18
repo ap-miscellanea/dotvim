@@ -38,7 +38,7 @@ set backupskip+=/var/spool/cron/*
 set formatoptions+=l1
 "set formatoptions+=n formatlistpat="^\s*\(\d\+[\]:.)}\t ]\|[*-]\)\s*" " recognize numbered and bulleted lists when formatting
 
-if exists( '&encoding' )
+if has( 'multi_byte' )
 	set encoding=utf-8                      " use UTF-8 internally
 	set fileencodings=ucs-bom,utf-8,cp1252  " assume files are UTF-8; if that fails, use Latin1
 endif
@@ -104,7 +104,7 @@ set noerrorbells        " shut up
 set visualbell          " shut up
 set t_vb=               " no really, shut up
 
-if exists( ':filetype' )
+if has( 'autocmd' )
 	filetype plugin indent on
 	autocmd filetypedetect BufRead,BufNewFile bash-fc-* call SetFileTypeSH('bash')
 	" ... and now the filetypedetect augroup is filled, so this will go last:
@@ -197,7 +197,7 @@ command! ClearUndo call s:ClearUndo()
 
 command! SynDebug echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
 
-if exists( ':filetype' )
+if has( 'autocmd' )
 	command! -nargs=+ Man delcommand Man | runtime ftplugin/man.vim | Man <args>
 endif
 
