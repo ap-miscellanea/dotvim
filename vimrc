@@ -100,9 +100,7 @@ set title               " show filename in window title
 set mouse=a             " be mouse-aware, in all modes
 set nomousehide         " hidden pointer = disorienting
 set lazyredraw          " speed up macros
-set noerrorbells        " shut up
-set visualbell          " shut up
-set t_vb=               " no really, shut up
+set visualbell t_vb=    " shut up
 
 if has( 'autocmd' )
 	filetype plugin indent on

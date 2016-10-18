@@ -1,4 +1,4 @@
-set t_vb= " shut up -- for the 4th time
+set t_vb= " no really, shut up
 
 set columns=110 lines=42
 set mousehide
