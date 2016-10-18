@@ -116,7 +116,7 @@ if has( 'menu' ) | exe 'anoremenu 100.9999 Book&marks.&Settings :e' expand( '<sf
 
 " when switching buffers, preserve window view
 autocmd BufWinLeave * if !&diff | let b:winview = winsaveview() | endif
-autocmd BufWinEnter * if exists('b:winview') && !&diff | call winrestview(b:winview) | endif
+autocmd BufWinEnter * if !&diff | call winrestview(get(b:,'winview',{})) | unlet! b:winview | endif
 
 " not needed there
 autocmd CmdwinEnter * set nonumber
