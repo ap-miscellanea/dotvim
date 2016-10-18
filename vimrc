@@ -77,10 +77,8 @@ else
 	hi Normal ctermbg=NONE
 endif
 
-if exists( '&breakindent' )
-	set breakindent     " visually indent continuation lines to match the wrapped line
-endif
 set linebreak           " word wrap mode
+silent! set breakindent " visually indent continuation lines to match the wrapped line
 set nowrap              " but actually disable wrapping (in most filetypes)
 set list                " ensure we don't mess up the tabbing
 set listchars=tab:›·    " and make that look nice
