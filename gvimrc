@@ -19,7 +19,7 @@ onoremap <M-LeftDrag>  <C-C><LeftDrag>
 if has( 'gui_gtk' )
 	set guifont=DejaVu\ Sans\ Mono\ 9,Bitstream\ Vera\ Sans\ Mono\ 9
 elseif has( 'gui_macvim' )
-	set guifont=Source_Code_Pro_Light:h13,Andale_Mono:h11,Menlo:h11
+	set guifont=SF_Mono_Light:h14,Source_Code_Pro:h13,Andale_Mono:h11,Menlo:h11
 	nnoremap <D-CR> :set invfullscreen<CR>
 	" defaults write org.vim.MacVim MMNativeFullScreen 0
 	let &guioptions = substitute(&guioptions, '[lLrR]', '', 'g') " turn off any and all scrollbars
