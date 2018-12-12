@@ -1,6 +1,6 @@
 set t_vb= " no really, shut up
 
-set columns=110 lines=42
+set columns=110 lines=60
 set mousehide
 set guioptions-=t         " no tear-off menu items
 set guioptions-=T         " no toolbar
