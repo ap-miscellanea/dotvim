@@ -1,12 +1,14 @@
 function! s:KeepSwitching(cmd)
 	exe a:cmd
+	" now we will check whether this buffer is shown in another window
 	if winnr('$') < 2 | return | endif
 	let curwin = winnr()
-	let origbuf = winbufnr(curwin)
+	let origbuf = winbufnr(curwin) " remember where we started
 	let windows = range(1,winnr('$'))
-	while len(filter(windows, 'winbufnr(v:val) == winbufnr(curwin)')) > 1
+	" if this buffer is already shown in another window, switch and check again
+	while len(filter(windows[:], 'winbufnr(v:val) == winbufnr(curwin)')) > 1
 		exe a:cmd
-		if winbufnr(curwin) == origbuf | break | endif
+		if winbufnr(curwin) == origbuf | break | endif " endless loop breaker
 	endwhile
 	return
 endfunction
