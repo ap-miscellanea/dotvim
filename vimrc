@@ -211,6 +211,8 @@ let g:perl_include_pod = 1 " include POD syntax highlighting
 " :help ft-sh-syntax
 let g:is_posix = 1 " assume POSIX by default, not original Bourne shell
 
+let g:togglecursor_default = 'block'
+let g:togglecursor_insert  = 'line'
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " plugin loading setup
