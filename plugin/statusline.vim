@@ -1,6 +1,8 @@
 let s:rx = '^}\s*\zs$\|^sub\s\+\zs\S\+'
+"let s:rx = '^[[:alpha:]$_]'
 
 function! PerlStatusLine()
+	if &filetype !=# 'perl' | return '' | endif
 	let b:statusline_funcname = matchstr(getline(search(s:rx,'bcnW')),s:rx)
 	return ' %#PmenuSel#%( %{get(b:,''statusline_funcname'','''')} %)%*'
 endf
