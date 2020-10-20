@@ -175,6 +175,8 @@ inoremap <expr> <C-R><C-R> eval(matchstr(@", '.*[^\n]'))
 " fill in closing tags automatically
 autocmd FileType * if len(&omnifunc) | exe 'inoremap <buffer> <expr> / getline(".")[col(".")-2] == "<" ? "/\<C-X>\<C-O>" : "/"' | endif
 
+vnoremap < <gv
+vnoremap > >gv
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " commands
