@@ -67,6 +67,11 @@ endif
 " basic display setup
 "
 
+" must happen before enabling syntax, for some reason:
+"let did_install_default_menus = 1 " File Edit Tools Window Help
+let did_install_syntax_menu = 1 " Syntax
+let no_buffers_menu = 1 " Buffers
+
 if has( 'syntax' ) | syntax enable | endif
 
 if has( 'gui_running' )
