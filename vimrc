@@ -82,7 +82,7 @@ if has( 'gui_running' )
 else
 	set background=dark
 	colorscheme PaperColor
-	hi Normal ctermbg=NONE
+	hi Normal ctermbg=NONE guibg=NONE
 endif
 
 set linebreak           " word wrap mode
