@@ -53,6 +53,9 @@ if has( 'digraphs' )
 	digraphs :)  9786 " white smiling face
 endif
 
+" works together with autogitchdir to make gf work nicely within projects
+set path=.,,**
+
 if has( 'wildmenu' )
 	set wildmenu
 	set wildmode=longest:full,list:full
