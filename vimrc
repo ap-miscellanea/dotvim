@@ -30,7 +30,9 @@ set shortmess+=mr     " shorten flags [Modified] and [readonly]
 set shortmess-=tT     " don't truncate file messages
 set viminfo='1000,h   " remove limits on register content size, keep marks for 10x as many files
 set viminfo+=f0       " forget user marks in order to forget the jumplist (docs say '0 does that but nope)
-set viminfo+=n~/.vim/.info " don't litter in $HOME
+set viminfo+=n~/.vim/.var/viminfo " don't litter in $HOME
+set directory=~/.vim/.var " ensure swap files do not end up on a network share
+set backupdir=~/.vim/.var " ditto backup files
 
 " Make vim work with the 'crontab -e' command
 set backupskip+=/var/spool/cron/*
