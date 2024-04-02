@@ -195,6 +195,8 @@ command! -range DecodeURI <line1>,<line2>s/%\([0-9A-F]\{2}\)/\=nr2char('0x'.subm
 
 command! -range TidyHTML <line1>,<line2>!tidyp -q -utf8 -config ~/.tidy.conf.unintrusive
 
+command! UndoList echo join(map(sort(undotree().entries, { i1, i2 -> i1.seq - i2.seq }), "strftime('%F %T ',v:val.time).v:val.seq"), "\n")
+
 function s:ClearUndo()
 	let saved = [&undolevels, &modified]
 	set undolevels=-1
