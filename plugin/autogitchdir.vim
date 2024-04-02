@@ -2,7 +2,7 @@
 " paying special attention to netrw stuff
 
 function! ChangeToDirFromBuffer()
-	if -1 < index(['help','nofile','acwrite'], &buftype) | return | endif
+	if -1 < index(['help','nofile','acwrite','terminal'], &buftype) | return | endif
 	if bufname('%') =~ '://' | return | endif
 	lcd %:p:h
 	if has('win32') | return | endif
