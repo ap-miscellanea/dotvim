@@ -5,6 +5,7 @@ set mousehide
 set guioptions-=t         " no tear-off menu items
 set guioptions-=T         " no toolbar
 set guioptions+=c         " use cmdline prompt instead of dialog windows for confirmation
+set guioptions+=k         " fit scrollbars/toolbars/etc. to window by adjusting &columns/&lines
 set guicursor+=a:blinkon0 " turn off cursor blinking
 set guitablabel=%N\ %t    " simpler tab labels than default
 
