@@ -9,6 +9,9 @@ set guioptions+=k         " fit scrollbars/toolbars/etc. to window by adjusting 
 set guicursor+=a:blinkon0 " turn off cursor blinking
 set guitablabel=%N\ %t    " simpler tab labels than default
 
+command! WinSize if &lines > 60 | set columns=110 lines=60 | else | set columns=150 lines=999 | endif
+nnoremap <F12> :WinSize<CR>
+
 " MacVim settings:
 " General:
 " - Open untitled window: on launch and re-activation
