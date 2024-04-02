@@ -189,7 +189,7 @@ vnoremap > >gv
 
 command! R enew | setlocal buftype=nofile bufhidden=hide noswapfile
 
-command! FindMarker /\([<=>|]\)\1\{6}/
+command! FindMarker /^\([<=>|]\)\1\{6}\(\1\)\@!/
 
 command! -range DecodeURI <line1>,<line2>s/%\([0-9A-F]\{2}\)/\=nr2char('0x'.submatch(1))/g
 
