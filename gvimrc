@@ -9,6 +9,28 @@ set guioptions+=k         " fit scrollbars/toolbars/etc. to window by adjusting 
 set guicursor+=a:blinkon0 " turn off cursor blinking
 set guitablabel=%N\ %t    " simpler tab labels than default
 
+" MacVim settings:
+" General:
+" - Open untitled window: on launch and re-activation
+"   (because Bookmarks are not available without an active window)
+" - Open files from apps: in new window; and set the arglist
+"   (so that they will open in buffers)
+" - After last window closes: Keep MacVim running
+" - Resize window smoothly
+" - Do not check for updates
+" Appearance:
+" - Dark mode: Use 'background' option
+" - Window appearance:
+"   - No transparent title bar
+"   - No hidden title bar
+"   - Leave drop shadows enabled
+" - Full Screen:
+"   - Disable native full screen mode
+"   - Do not show menu bar in non-native mode
+" - Pin command-line to the bottom of the window
+" Advanced:
+" - Enable Quickstart
+
 " Alt-LeftMouse for visual block selections
 noremap  <M-LeftMouse> <4-LeftMouse>
 inoremap <M-LeftMouse> <4-LeftMouse>
