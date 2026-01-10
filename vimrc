@@ -189,6 +189,8 @@ command! R enew | setlocal buftype=nofile bufhidden=hide noswapfile
 
 command! FindMarker /^\([<=>|]\)\1\{6}\(\1\)\@!/
 
+command! -range=% RebaseRecommit <line1>,<line2>s!^\(reset .*\|pick \([0-9a-f]\+\) \(.*\)\)\nexec \(.*\) git commit --amend --no-edit\%(\nexec \%(.*\) git commit --amend --no-edit\)*$!\=submatch(1) =~ '^reset' ? submatch(1) : 'exec '.submatch(4).' git cherry-pick '.submatch(2).' # '.submatch(3)!
+
 command! -range DecodeURI <line1>,<line2>s/%\([0-9A-F]\{2}\)/\=nr2char('0x'.submatch(1))/g
 
 command! -range TidyHTML <line1>,<line2>!tidy -q -utf8 -config ~/.config/tidy/unintrusive.conf
