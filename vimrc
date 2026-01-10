@@ -191,7 +191,7 @@ command! FindMarker /^\([<=>|]\)\1\{6}\(\1\)\@!/
 
 command! -range DecodeURI <line1>,<line2>s/%\([0-9A-F]\{2}\)/\=nr2char('0x'.submatch(1))/g
 
-command! -range TidyHTML <line1>,<line2>!tidyp -q -utf8 -config ~/.tidy.conf.unintrusive
+command! -range TidyHTML <line1>,<line2>!tidy -q -utf8 -config ~/.config/tidy/unintrusive.conf
 
 command! UndoList echo join(map(sort(undotree().entries, { i1, i2 -> i1.seq - i2.seq }), "strftime('%F %T ',v:val.time).v:val.seq"), "\n")
 
