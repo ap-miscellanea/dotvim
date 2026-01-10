@@ -112,7 +112,9 @@ set visualbell t_vb=    " shut up
 
 if has( 'autocmd' )
 	filetype plugin indent on
-	autocmd filetypedetect BufRead,BufNewFile bash-fc-* call SetFileTypeSH('bash')
+	if ! exists( '#filetypedetect#BufRead#bash-fc[-.]*' )
+		autocmd filetypedetect BufRead,BufNewFile bash-fc[-.]* call SetFileTypeSH('bash')
+	endif
 	" setting &list breaks &linebreak in Vims that do not have &breakindent
 	exe 'autocmd FileType text,mail,markdown setlocal wrap' exists( '&breakindent' ) ? '' : 'nolist'
 endif
