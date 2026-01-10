@@ -113,12 +113,8 @@ set visualbell t_vb=    " shut up
 if has( 'autocmd' )
 	filetype plugin indent on
 	autocmd filetypedetect BufRead,BufNewFile bash-fc-* call SetFileTypeSH('bash')
-	" ... and now the filetypedetect augroup is filled, so this will go last:
-	autocmd filetypedetect BufNewFile,BufRead,StdinReadPost * setfiletype unknown
-	" ... which makes this reliable:
-	exe 'autocmd FileType text,mail,markdown,xml,xhtml,html,unknown setlocal wrap'
-		\ exists( '&breakindent' ) ? '' : 'nolist'
-		" setting &list breaks &linebreak in Vims that do not have &breakindent
+	" setting &list breaks &linebreak in Vims that do not have &breakindent
+	exe 'autocmd FileType text,mail,markdown setlocal wrap' exists( '&breakindent' ) ? '' : 'nolist'
 endif
 
 " set up bookmarks menu
